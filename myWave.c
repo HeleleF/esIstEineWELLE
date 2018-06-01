@@ -12,9 +12,11 @@
 int main(int argc, char **argv)
 {
 
+	getUserInputOrConfig(argc, **argv);
+
 	init();
 
-	simulateNumberOfTimeSteps(10);
+	simulateNumberOfTimeSteps();
 
 	close();
 

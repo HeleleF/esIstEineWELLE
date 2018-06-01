@@ -8,54 +8,85 @@
 #include "omp.h"
 #include <math.h>
 
+const double PI = 3.141592653;
+
 double *previousStep, *currentStep, *nextStep;
 
-unsigned int npoints = 20; //number of points on the string (i)
-unsigned int tpoints = 10; // number of time steps
+int NPOINTS; //number of points on the string (i)
+int TPOINTS; // number of time steps
 
-void calc(int i) {
-	double c = 0.3; // this is user input
+double DELTA_T; //delta t, dt
+double DELTA_X; //delta x, dx
 
-	const double dt = 1.0;
-	const double dx = 1.0;
-	double tau, sqtau;
+double L;
+double T;
 
-	tau = c * (dt / dx);
-	sqtau = tau * tau;
-	nextStep[i] = 2.0 * currentStep[i] - previousStep[i]
-			+ (sqtau
-					* (currentStep[i - 1] - (2.0 * currentStep[i])
-							+ currentStep[i + 1]));
+double C;
+double COURANT;
+double COURANT_SQUARED;
+
+double (*I)(double);
+
+
+double myInitFunc(double x) {
+	return  (2 * sin(x*PI/L));
+}
+
+void getUserInputOrConfig() {
+
+	C = 1.5;
+	COURANT = 0.75 // counrant zahl, muss zwischen 0 und 1 sein
+	COURANT_SQUARED = COURANT * COURANT; // das ist der faktor aus der gleichung
+
+	T = 10 // von wo bis wo soll die zeit gehen -> von 0 bis T
+	DELTA_T = 0.05 // das ist der zeitschritt abstand, 
+	TPOINTS = (int) (T / DELTA_T); // in wie viele zeitpunkte wird die zeit eingeteilt
+
+	L = 5; // von wo bis wo soll der string gehen -> von 0 bis L
+	DELTA_X = DELTA_T * C / COURANT
+	NPOINTS = (int) (L / DELTA_X); // in wie viele punkte wird der string unterteilt
+
+	I = &myInitFunc; // initaer werte aus dieser funktion nehmen
 }
 
 void init() {
 
-	currentStep = malloc(npoints * sizeof(double));
-	previousStep = malloc(npoints * sizeof(double));
-	nextStep = malloc(npoints * sizeof(double));
+	double x;
 
-	memset(previousStep, 0, npoints);
-	memset(currentStep, 0, npoints);
-	memset(nextStep, 0, npoints);
+	// arrays initialiserien und auf 0 setzen
+	const int bufSize = (NPOINTS+1) * sizeof(double);
+	previousStep = malloc(bufSize);
+	currentStep = malloc(bufSize);
+	nextStep = malloc(bufSize);
 
-	for (int x = 1; x < npoints - 1; x++) {
-		previousStep[x] = sin(x * 2.0);
-		currentStep[x] = sin(x * 2.0);
+	memset(previousStep, 0, NPOINTS);
+	memset(currentStep, 0, NPOINTS);
+	memset(nextStep, 0, NPOINTS);
+
+	for (int i = 0; i < NPOINTS + 1; i++) {
+
+		x = i * dx;
+		previousStep[i] = I(x);
+	}
+
+	for (int i = 1; i < NPOINTS; i++) {
+
+		currentStep[i] = previousStep[i] + 0.5 * COURANT_SQUARED * (previousStep[i-1] - (2.0 * previousStep[i]) + previousStep[i+1]);
 	}
 }
 
 void simulateOneTimeStep() {
 
 	/* update points along line */
-	for (int j = 1; j < npoints - 1; j++) {
-		calc(j);
+	for (int i = 1; i < NPOINTS; i++) {
+			nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + COURANT_SQUARED * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
 	}
 
 	nextStep[0] = 0.0;
-	nextStep[npoints - 1] = 0.0;
+	nextStep[NPOINTS] = 0.0;
 
 	//performance- => many write operations to swap the arrays
-	for (int k = 0; k < npoints; k++) {
+	for (int k = 0; k < NPOINTS+1; k++) {
 		previousStep[k] = currentStep[k];
 		currentStep[k] = nextStep[k];
 	}
@@ -70,10 +101,10 @@ void simulateOneTimeStep() {
 
 }
 
-void simulateNumberOfTimeSteps(unsigned int numberOfTimeSteps) {
+void simulateNumberOfTimeSteps() {
 
 	// time steps
-	for (int i = 0; i < numberOfTimeSteps; ++i) {
+	for (int i = 1; i < TPOINTS; ++i) {
 		simulateOneTimeStep();
 	}
 

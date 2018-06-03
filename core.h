@@ -6,15 +6,21 @@
 #include <math.h>
 #include <string.h>
 
-void getUserInputOrConfig(int argc, char** argv);
+double myInitFunc(double x);
+void getFromSettingsFile(char *configPath);
+void getUserInputOrConfig(int argc,char** argv);
 
-void init(void);
+void initMeins(void);
 
 void simulateOneTimeStep(void);
-void simulateNumberOfTimeSteps();
+void simulateNumberOfTimeSteps(void);
 
-void close(void);
+void closeMeins(void);
 
 void outputNew(void);
+
+double * getStep(void);
+int getNPOINTS(void);
+int getTPOINTS(void);
 
 #endif

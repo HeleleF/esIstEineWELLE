@@ -6,15 +6,15 @@ TARGET=myWave
 # Flags and stuff, change as required
 OPTIMIZE=-O3
 # Flags for all languages
-CPPFLAGS=-ggdb $(OPTIMIZE) -Wall -MMD -MP
+CPPFLAGS=-ggdb $(OPTIMIZE) -Wall -MMD -MP `pkg-config --cflags --libs sdl2`
 # Flags for C only
 CFLAGS=-Wmissing-prototypes
 # Flags for C++ only
 CXXFLAGS=-std=c++11
 # Flags for the linker
-LDFLAGS=
+LDFLAGS=-lSDL2 -lSDL2main 
 # Additional linker libs
-LDLIBS=-lm
+LDLIBS=-lm -lSDL2 -lSDL2main
 
 # Compilers
 CC=gcc

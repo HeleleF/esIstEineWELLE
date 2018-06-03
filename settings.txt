@@ -1,0 +1,13 @@
+#settings wave
+
+C 6.5
+
+COURANT_NUMBER 0.75
+
+# 0 für unendlich
+TIME_INTERVAL_END 0
+
+TIME_STEP 0.2
+
+LINE_INTERVAL_END 1000
+

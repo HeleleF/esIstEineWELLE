@@ -29,27 +29,102 @@ double (*I)(double);
 
 
 double myInitFunc(double x) {
-	return  (2 * sin(x*PI/L));
+	return  (100 * sin(x*PI/(L/10)));
 }
 
-void getUserInputOrConfig() {
+void getFromSettingsFile(char *configPath) {
 
-	C = 1.5;
-	COURANT = 0.75 // counrant zahl, muss zwischen 0 und 1 sein
-	COURANT_SQUARED = COURANT * COURANT; // das ist der faktor aus der gleichung
+    const int MAXLINE = 100;
 
-	T = 10 // von wo bis wo soll die zeit gehen -> von 0 bis T
-	DELTA_T = 0.05 // das ist der zeitschritt abstand, 
-	TPOINTS = (int) (T / DELTA_T); // in wie viele zeitpunkte wird die zeit eingeteilt
 
-	L = 5; // von wo bis wo soll der string gehen -> von 0 bis L
-	DELTA_X = DELTA_T * C / COURANT
+    FILE * filePointer;
+    char buffer[MAXLINE], configKey[20], configValue[10];
+    int i, count;
+
+    filePointer = fopen(configPath,"r");
+    if(NULL == filePointer)
+    {
+        printf("Error getting config file '%s'!\n", configPath);
+    } 
+
+    while(NULL != fgets(buffer, MAXLINE, filePointer))
+    {
+        count = 0;
+        i = 0;
+
+        if ('#' == buffer[0]) //ignore comments
+        {
+            continue;
+        }
+        
+        while (' ' != buffer[i]) //get config key
+        {
+            configKey[i] = buffer[i];
+            i++;
+        }
+        configKey[i++]='\0';
+        count=i;
+
+        while ('\n' != buffer[i]) //get config value
+        {
+            configValue[i-count] = buffer[i];
+            i++;
+        }
+        configValue[i-count] = '\0';
+
+        if (0 == strcmp(configKey, "C"))
+        {
+            C = atof(configValue); 
+        } 
+        else if (0 == strcmp(configKey, "COURANT_NUMBER"))
+        {
+            COURANT = atof(configValue); // counrant zahl, muss zwischen 0 und 1 sein
+            COURANT_SQUARED = COURANT * COURANT; // das ist der faktor aus der gleichung
+        } 
+        else if (0 == strcmp(configKey, "TIME_INTERVAL_END"))
+        {
+            T = atof(configValue); // von wo bis wo soll die zeit gehen -> von 0 bis T
+        } 
+        else if (0 == strcmp(configKey, "TIME_STEP"))
+        {
+            DELTA_T = atof(configValue); // das ist der zeitschritt abstand, 
+        }
+        else if (0 == strcmp(configKey, "LINE_INTERVAL_END"))
+        {
+            L = atof(configValue); // von wo bis wo soll der string gehen -> von 0 bis L
+        }
+    }
+
+    TPOINTS = (int) (T / DELTA_T); // in wie viele zeitpunkte wird die zeit eingeteilt
+
+	DELTA_X = DELTA_T * C / COURANT;
 	NPOINTS = (int) (L / DELTA_X); // in wie viele punkte wird der string unterteilt
 
 	I = &myInitFunc; // initaer werte aus dieser funktion nehmen
 }
 
-void init() {
+
+void getUserInputOrConfig(int numberofargc, char** argv) {
+
+	if (numberofargc > 1) {
+
+		// es gibt cmd line args
+		if (0 == strcmp(argv[1], "-c") || 0 == strcmp(argv[1], "--use-config-file")) {
+			getFromSettingsFile(argv[2]);
+		} else {
+			// manually parse args
+		}
+	} else {
+
+		// keine cmd args, also standard setting file nehmen
+		getFromSettingsFile("settings.txt");
+	}
+	printf("Using C = %f and Courant number = %f in a Time interval [0 , %f] with time step width of %f over line interval [0 , %f]\n", C,COURANT,T,DELTA_T,L);
+	printf("Total number of time points = %d, DELTA_X =  dx %f and total number of line points = %d\n", TPOINTS,DELTA_X,NPOINTS);
+
+}
+
+void initMeins() {
 
 	double x;
 
@@ -65,7 +140,7 @@ void init() {
 
 	for (int i = 0; i < NPOINTS + 1; i++) {
 
-		x = i * dx;
+		x = i * DELTA_X;
 		previousStep[i] = I(x);
 	}
 
@@ -91,7 +166,7 @@ void simulateOneTimeStep() {
 		currentStep[k] = nextStep[k];
 	}
 
-	outputNew();
+	//outputNew();
 
 	/* //performance+ => use array swap directly via pointer
 	 double *tempStep = previousStep;
@@ -110,7 +185,7 @@ void simulateNumberOfTimeSteps() {
 
 }
 
-void close() {
+void closeMeins() {
 
 	free(previousStep);
 	free(currentStep);
@@ -120,9 +195,21 @@ void close() {
 
 void outputNew() {
 
-	for (int l = 0; l < npoints; ++l) {
+	for (int l = 0; l < NPOINTS+1; ++l) {
 		printf("%f\n", nextStep[l]);
 	}
 	printf("-------------------------------------------\n");
+}
+
+double * getStep() {
+	return nextStep;
+}
+
+int getNPOINTS() {
+	return NPOINTS;
+}
+
+int getTPOINTS() {
+	return TPOINTS;
 }
 

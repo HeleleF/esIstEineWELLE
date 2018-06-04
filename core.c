@@ -129,7 +129,7 @@ void initMeins() {
 	double x;
 
 	// arrays initialiserien und auf 0 setzen
-	const int bufSize = (NPOINTS+1) * sizeof(double);
+	const size_t bufSize = (NPOINTS+1) * sizeof(double);
 	previousStep = malloc(bufSize);
 	currentStep = malloc(bufSize);
 	nextStep = malloc(bufSize);
@@ -153,6 +153,7 @@ void initMeins() {
 void simulateOneTimeStep() {
 
 	/* update points along line */
+	#pragma omp parallel for shared(nextStep, currentStep, previousStep, COURANT_SQUARED, NPOINTS) private(i)
 	for (int i = 1; i < NPOINTS; i++) {
 			nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + COURANT_SQUARED * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
 	}

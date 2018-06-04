@@ -5,12 +5,18 @@
  */
 
 #include "core.h"
-#include "omp.h"
+#include <omp.h>
 #include <math.h>
+
+//TODO: alles rivhtig bennen und an die richtigen stellen packen cconvention stil
+//TODO: auch den malloc usw timen und erwähnen vllt
+//TODO: schonmal über benchmark script gedanken machen
 
 const double PI = 3.141592653;
 
 double *previousStep, *currentStep, *nextStep;
+
+int useGui;
 
 int NPOINTS; //number of points on the string (i)
 int TPOINTS; // number of time steps
@@ -29,7 +35,7 @@ double (*I)(double);
 
 
 double myInitFunc(double x) {
-	return  (100 * sin(x*PI/(L/10)));
+	return  (25 * sin(x*PI/(L/10)));
 }
 
 void getFromSettingsFile(char *configPath) {
@@ -93,6 +99,10 @@ void getFromSettingsFile(char *configPath) {
         {
             L = atof(configValue); // von wo bis wo soll der string gehen -> von 0 bis L
         }
+        else if (0 == strcmp(configKey, "SHOW_GUI"))
+        {
+            useGui = atoi(configValue); // use gui
+        }
     }
 
     TPOINTS = (int) (T / DELTA_T); // in wie viele zeitpunkte wird die zeit eingeteilt
@@ -127,6 +137,7 @@ void getUserInputOrConfig(int numberofargc, char** argv) {
 void initMeins() {
 
 	double x;
+	int i;
 
 	// arrays initialiserien und auf 0 setzen
 	const size_t bufSize = (NPOINTS+1) * sizeof(double);
@@ -138,13 +149,13 @@ void initMeins() {
 	memset(currentStep, 0, NPOINTS);
 	memset(nextStep, 0, NPOINTS);
 
-	for (int i = 0; i < NPOINTS + 1; i++) {
+	for (i = 0; i < NPOINTS + 1; i++) {
 
 		x = i * DELTA_X;
 		previousStep[i] = I(x);
 	}
 
-	for (int i = 1; i < NPOINTS; i++) {
+	for (i = 1; i < NPOINTS; i++) {
 
 		currentStep[i] = previousStep[i] + 0.5 * COURANT_SQUARED * (previousStep[i-1] - (2.0 * previousStep[i]) + previousStep[i+1]);
 	}
@@ -152,37 +163,64 @@ void initMeins() {
 
 void simulateOneTimeStep() {
 
+	int i;
+
+	
+	
+
 	/* update points along line */
 	#pragma omp parallel for shared(nextStep, currentStep, previousStep, COURANT_SQUARED, NPOINTS) private(i)
-	for (int i = 1; i < NPOINTS; i++) {
+	for (i = 1; i < NPOINTS; i++) {
 			nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + COURANT_SQUARED * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
 	}
+
+
 
 	nextStep[0] = 0.0;
 	nextStep[NPOINTS] = 0.0;
 
-	//performance- => many write operations to swap the arrays
+	/*//performance- => many write operations to swap the arrays
 	for (int k = 0; k < NPOINTS+1; k++) {
 		previousStep[k] = currentStep[k];
 		currentStep[k] = nextStep[k];
-	}
+	}*/
 
 	//outputNew();
 
-	/* //performance+ => use array swap directly via pointer
+	 //performance+ => use array swap directly via pointer
+	// with omp and 4 cores performance speedup of ~2.3 with this over the loop swap
 	 double *tempStep = previousStep;
 	 previousStep = currentStep;
 	 currentStep = nextStep;
-	 nextStep = tempStep;*/
+	 nextStep = tempStep;
 
 }
 
 void simulateNumberOfTimeSteps() {
 
+	struct timeval astart, aend;
+	gettimeofday(&astart, NULL);
+	printf("start\n");
+	// TODO: welche timer soll man nehmen?
+	double start = omp_get_wtime();
+
+
 	// time steps
 	for (int i = 1; i < TPOINTS; ++i) {
 		simulateOneTimeStep();
 	}
+
+	gettimeofday(&aend, NULL);
+	printf("end\n");
+	double end = omp_get_wtime();
+
+	double elapsed = end - start;
+	double adelta = ((aend.tv_sec - astart.tv_sec) * 1000000u + aend.tv_sec - astart.tv_sec) / 1e6;
+
+	printf("Time ges:%f\n", adelta);
+	printf("Time davon openmp:%f\n", elapsed);
+
+
 
 }
 
@@ -203,7 +241,7 @@ void outputNew() {
 }
 
 double * getStep() {
-	return nextStep;
+	return currentStep;
 }
 
 int getNPOINTS() {
@@ -214,3 +252,6 @@ int getTPOINTS() {
 	return TPOINTS;
 }
 
+int useGUI() {
+	return useGui;
+}

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <sys/time.h>
 
 double myInitFunc(double x);
 void getFromSettingsFile(char *configPath);
@@ -22,5 +23,6 @@ void outputNew(void);
 double * getStep(void);
 int getNPOINTS(void);
 int getTPOINTS(void);
+int useGUI(void);
 
 #endif

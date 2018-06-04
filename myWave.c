@@ -14,6 +14,10 @@
 #define MEIN_WINDOW_WIDHT 1280
 #define MEIN_WINDOW_HEIGHT 720
 
+#define WIDTH_OFFSET 20
+
+void doGraphics(void);
+
 
 
 
@@ -42,7 +46,7 @@ void doGraphics() {
 		printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
 	}
 
-	const int fps = 10;
+	const int fps = 24;
 	const Uint32 ticksPerFrame = 1000 / fps; 
 
 	const int tpoints = getTPOINTS(); 
@@ -81,22 +85,15 @@ void doGraphics() {
 			break;
 		}
 
-		SDL_DisplayMode mode;
-		int w;
-		int h;
 		static Uint32 lastFrameTick = 0;
 		Uint32 currentFrameTick = SDL_GetTicks();
 		if(lastFrameTick == 0) {
 			lastFrameTick = SDL_GetTicks();
 		}
 
-		/*
-		SDL_GetWindowDisplayMode(gWindow, &mode);
-		w = mode.w;
-		h = mode.h;*/
 
   /* Clear the screen */
-		SDL_SetRenderDrawColor(gRenderer,255,0,0,255);
+		SDL_SetRenderDrawColor(gRenderer,255,255,255,255);
 		SDL_RenderClear(gRenderer);
 
   // hier malen
@@ -106,9 +103,9 @@ void doGraphics() {
 		double* vals = getStep();
 
 		for (int l = 1; l < npoints+1; ++l) {
-			SDL_SetRenderDrawColor(gRenderer,255,255,0,255);
+			SDL_SetRenderDrawColor(gRenderer,0,0,0,255);
 
-			SDL_RenderDrawLine(gRenderer, l-1,vals[l-1]+(MEIN_WINDOW_HEIGHT / 2), l, vals[l]+(MEIN_WINDOW_HEIGHT / 2));
+			SDL_RenderDrawLine(gRenderer, l-1 + WIDTH_OFFSET,vals[l-1]+(MEIN_WINDOW_HEIGHT / 2), l + WIDTH_OFFSET, vals[l]+(MEIN_WINDOW_HEIGHT / 2));
 
 		}
 
@@ -137,11 +134,9 @@ int main(int argc, char **argv)
 
 	getUserInputOrConfig(argc, argv);
 
-	int useGui = 1;
-
 	initMeins();
 
-	if (useGui) {
+	if (useGUI()) {
 		doGraphics();
 
 	} else {

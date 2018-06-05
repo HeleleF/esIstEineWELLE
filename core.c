@@ -58,12 +58,12 @@ void getFromSettingsFile(char *configPath) {
         count = 0;
         i = 0;
 
-        if ('#' == buffer[0]) //ignore comments
+        if ('#' == buffer[0]) //kommenatre mit hashtag beginnen
         {
             continue;
         }
         
-        while (' ' != buffer[i]) //get config key
+        while (' ' != buffer[i]) //setting key holen
         {
             configKey[i] = buffer[i];
             i++;
@@ -71,7 +71,7 @@ void getFromSettingsFile(char *configPath) {
         configKey[i++]='\0';
         count=i;
 
-        while ('\n' != buffer[i]) //get config value
+        while ('\n' != buffer[i]) //zugehörigen setting wert holen
         {
             configValue[i-count] = buffer[i];
             i++;

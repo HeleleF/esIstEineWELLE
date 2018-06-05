@@ -6,10 +6,7 @@
 	 */
 #include <SDL2/SDL.h>
 
-	#include <stdio.h>
-	#include <stdlib.h>
-
-	#include "core.h"
+#include "core.h"
 
 #define MEIN_WINDOW_WIDHT 1280
 #define MEIN_WINDOW_HEIGHT 720
@@ -35,7 +32,7 @@ void doGraphics() {
 	};
 
 	//Create window
-	gWindow = SDL_CreateWindow( "SDL Tutorial", 0, 0, MEIN_WINDOW_WIDHT, MEIN_WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
+	gWindow = SDL_CreateWindow( "Psys18 Wellengleichung", 0, 0, MEIN_WINDOW_WIDHT, MEIN_WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
 	if(gWindow == NULL) {
 		printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
 	}
@@ -51,7 +48,7 @@ void doGraphics() {
 
 	const int tpoints = getTPOINTS(); 
 	const int npoints = getNPOINTS();
-	int howmanyt = 1;
+	int currentTimeStep = 1;
 
 	int run = 1;
 
@@ -80,7 +77,7 @@ void doGraphics() {
 			}
 		}
 
-		if (howmanyt == tpoints) {
+		if (currentTimeStep == tpoints) {
 			run = 0;
 			break;
 		}
@@ -98,7 +95,7 @@ void doGraphics() {
 
   // hier malen
 		simulateOneTimeStep();
-		howmanyt++;
+		currentTimeStep++;
 
 		double* vals = getStep();
 
@@ -140,6 +137,8 @@ int main(int argc, char **argv)
 		doGraphics();
 
 	} else {
+
+		
 		simulateNumberOfTimeSteps();
 	}
 

@@ -54,7 +54,7 @@ endif
 
 # The first target (all) is always the default target
 .PHONY: all
-all: build
+all: build #test check
 
 # Our build target depends on the real target
 .PHONY: build

@@ -1,0 +1,76 @@
+\hypertarget{myWave_8h}{}\section{my\+Wave.\+h File Reference}
+\label{myWave_8h}\index{my\+Wave.\+h@{my\+Wave.\+h}}
+
+
+contains the main program  
+
+
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\\*
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+image.\+h$>$}\\*
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+ttf.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}core.\+h\char`\"{}}\\*
+Include dependency graph for my\+Wave.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{myWave_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=144pt]{myWave_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{myWave_8h_a75fd71424c598545d6f9d1e4e96957be}{do\+Graphics} (void)
+\item 
+void \hyperlink{myWave_8h_ade82befa6e7b024eb4caa3005b74d9ff}{init\+Sdl\+Vars} (S\+D\+L\+\_\+\+Window $\ast$$\ast$win, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$ren, T\+T\+F\+\_\+\+Font $\ast$$\ast$fon)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+contains the main program 
+
+\begin{DoxyAuthor}{Author}
+Chris Rebbelin s0548921 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2018-\/07-\/01 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\index{my\+Wave.\+h@{my\+Wave.\+h}!do\+Graphics@{do\+Graphics}}
+\index{do\+Graphics@{do\+Graphics}!my\+Wave.\+h@{my\+Wave.\+h}}
+\subsubsection[{\texorpdfstring{do\+Graphics(void)}{doGraphics(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void do\+Graphics (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{myWave_8h_a75fd71424c598545d6f9d1e4e96957be}{}\label{myWave_8h_a75fd71424c598545d6f9d1e4e96957be}
+Visualizes the wave equation with the given parameters with the S\+DL library. \index{my\+Wave.\+h@{my\+Wave.\+h}!init\+Sdl\+Vars@{init\+Sdl\+Vars}}
+\index{init\+Sdl\+Vars@{init\+Sdl\+Vars}!my\+Wave.\+h@{my\+Wave.\+h}}
+\subsubsection[{\texorpdfstring{init\+Sdl\+Vars(\+S\+D\+L\+\_\+\+Window $\ast$$\ast$win, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$ren, T\+T\+F\+\_\+\+Font $\ast$$\ast$fon)}{initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)}}]{\setlength{\rightskip}{0pt plus 5cm}void init\+Sdl\+Vars (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Window $\ast$$\ast$}]{win, }
+\item[{S\+D\+L\+\_\+\+Renderer $\ast$$\ast$}]{ren, }
+\item[{T\+T\+F\+\_\+\+Font $\ast$$\ast$}]{fon}
+\end{DoxyParamCaption}
+)}\hypertarget{myWave_8h_ade82befa6e7b024eb4caa3005b74d9ff}{}\label{myWave_8h_ade82befa6e7b024eb4caa3005b74d9ff}
+Initializes all needed S\+DL variables.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & pointer to the S\+D\+L\+\_\+\+Window \\
+\hline
+{\em ren} & pointer to the S\+D\+L\+\_\+\+Renderer \\
+\hline
+{\em fon} & pointer to the T\+T\+F\+\_\+\+Font \\
+\hline
+\end{DoxyParams}

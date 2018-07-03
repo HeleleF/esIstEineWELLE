@@ -1,0 +1,87 @@
+\hypertarget{myWave_8c}{}\section{my\+Wave.\+c File Reference}
+\label{myWave_8c}\index{my\+Wave.\+c@{my\+Wave.\+c}}
+
+
+This file contains the main program.  
+
+
+{\ttfamily \#include \char`\"{}my\+Wave.\+h\char`\"{}}\\*
+Include dependency graph for my\+Wave.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{myWave_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries M\+Y\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+W\+I\+D\+HT}~1024\hypertarget{myWave_8c_ac2e26d3124b580803153bf9938a692a8}{}\label{myWave_8c_ac2e26d3124b580803153bf9938a692a8}
+
+\item 
+\#define {\bfseries M\+Y\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+H\+E\+I\+G\+HT}~720\hypertarget{myWave_8c_acaf3b58eaefb27cfbcea880785934dc6}{}\label{myWave_8c_acaf3b58eaefb27cfbcea880785934dc6}
+
+\item 
+\#define {\bfseries W\+I\+D\+T\+H\+\_\+\+O\+F\+F\+S\+ET}~20\hypertarget{myWave_8c_a6a6dbe125418de8a9f11943d009ef9ae}{}\label{myWave_8c_a6a6dbe125418de8a9f11943d009ef9ae}
+
+\item 
+\#define {\bfseries Y\+\_\+\+A\+X\+I\+S\+\_\+\+L\+E\+N\+G\+TH}~256\hypertarget{myWave_8c_a19f5b38cb67cf6096ad59aa9ecfe7685}{}\label{myWave_8c_a19f5b38cb67cf6096ad59aa9ecfe7685}
+
+\item 
+\#define {\bfseries H\+O\+L\+D\+\_\+\+T\+O\+L\+E\+R\+A\+N\+CE}~20\hypertarget{myWave_8c_ab3a3306c90210cba781c3a3f91b07538}{}\label{myWave_8c_ab3a3306c90210cba781c3a3f91b07538}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{myWave_8c_ade82befa6e7b024eb4caa3005b74d9ff}{init\+Sdl\+Vars} (S\+D\+L\+\_\+\+Window $\ast$$\ast$win, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$ren, T\+T\+F\+\_\+\+Font $\ast$$\ast$fon)
+\item 
+void \hyperlink{myWave_8c_a3a48a942f1505a1f3e7178059cbeaea2}{do\+Graphics} ()
+\item 
+int {\bfseries main} (int argc, char $\ast$$\ast$argv)\hypertarget{myWave_8c_a3c04138a5bfe5d72780bb7e82a18e627}{}\label{myWave_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This file contains the main program. 
+
+Implements the main program and visualisation to the user
+
+\begin{DoxyAuthor}{Author}
+Chris Rebbelin s0548921 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2018-\/07-\/01 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\index{my\+Wave.\+c@{my\+Wave.\+c}!do\+Graphics@{do\+Graphics}}
+\index{do\+Graphics@{do\+Graphics}!my\+Wave.\+c@{my\+Wave.\+c}}
+\subsubsection[{\texorpdfstring{do\+Graphics()}{doGraphics()}}]{\setlength{\rightskip}{0pt plus 5cm}void do\+Graphics (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{myWave_8c_a3a48a942f1505a1f3e7178059cbeaea2}{}\label{myWave_8c_a3a48a942f1505a1f3e7178059cbeaea2}
+Visualizes the wave equation with the given parameters with the S\+DL library. \index{my\+Wave.\+c@{my\+Wave.\+c}!init\+Sdl\+Vars@{init\+Sdl\+Vars}}
+\index{init\+Sdl\+Vars@{init\+Sdl\+Vars}!my\+Wave.\+c@{my\+Wave.\+c}}
+\subsubsection[{\texorpdfstring{init\+Sdl\+Vars(\+S\+D\+L\+\_\+\+Window $\ast$$\ast$win, S\+D\+L\+\_\+\+Renderer $\ast$$\ast$ren, T\+T\+F\+\_\+\+Font $\ast$$\ast$fon)}{initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)}}]{\setlength{\rightskip}{0pt plus 5cm}void init\+Sdl\+Vars (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Window $\ast$$\ast$}]{win, }
+\item[{S\+D\+L\+\_\+\+Renderer $\ast$$\ast$}]{ren, }
+\item[{T\+T\+F\+\_\+\+Font $\ast$$\ast$}]{fon}
+\end{DoxyParamCaption}
+)}\hypertarget{myWave_8c_ade82befa6e7b024eb4caa3005b74d9ff}{}\label{myWave_8c_ade82befa6e7b024eb4caa3005b74d9ff}
+Initializes all needed S\+DL variables.
+
+
+\begin{DoxyParams}{Parameters}
+{\em win} & pointer to the S\+D\+L\+\_\+\+Window \\
+\hline
+{\em ren} & pointer to the S\+D\+L\+\_\+\+Renderer \\
+\hline
+{\em fon} & pointer to the T\+T\+F\+\_\+\+Font \\
+\hline
+\end{DoxyParams}

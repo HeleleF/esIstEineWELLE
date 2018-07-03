@@ -14,7 +14,7 @@ CXXFLAGS=-std=c++11
 # Flags for the linker
 LDFLAGS= -fopenmp
 # Additional linker libs
-LDLIBS=-lm -lSDL2 
+LDLIBS=-lm -lSDL2 -lSDL2_image -lSDL2_ttf
 
 # Compilers
 CC=gcc
@@ -54,7 +54,7 @@ endif
 
 # The first target (all) is always the default target
 .PHONY: all
-all: build #test check
+all: build
 
 # Our build target depends on the real target
 .PHONY: build

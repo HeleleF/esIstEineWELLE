@@ -88,7 +88,7 @@ void getFromSettingsFile(char *configPath) {
     char buffer[MAXLINE], configKey[50], configValue[50];
     int i, count;
 
-    filePointer = fopen(configPath,"r");
+    filePointer = fopen(configPath, "r");
     if(NULL == filePointer) {
         printf("[ERROR] Could not get file '%s'!\n", configPath);
     }
@@ -156,7 +156,7 @@ void getFromCmdLine(int nargc, char** argv) {
 
         } else if (0 == strcmp(argv[1], "-v") || 0 == strcmp(argv[1], "--version")) {
 
-            printf("Wave equation - Psys18\nChris Rebbelin 2018\nVersion 0.1\n");
+            printf("Wave equation MPI - Psys18\nChris Rebbelin 2018\nVersion 0.1\n");
             exit(EXIT_SUCCESS);
 
         } else if (0 == strcmp(argv[1], "-b") || 0 == strcmp(argv[1], "--benchmark")) {
@@ -312,24 +312,27 @@ double waveInitFunc(double x) {
 
 void simulateOneTimeStep(int holdflag) {
 
-        // nächsten schritt berechnen
+        // calculate next time step with wave equation
         for (int i = 1; i < right - left; i++ ) {
             nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + C_SQUARED * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
         }
 
-        // wenn NICHT master (der ist ganz links und hat keinen linken nachbarn)
         if (id != MASTER) {
-            CHECK(MPI_Send(&nextStep[1], 1, MPI_DOUBLE, id - 1, R_TO_L, MPI_COMM_WORLD)); // meinen linken verschicken
+            // exchange border values with the left neighbor
+            CHECK(MPI_Send(&nextStep[1], 1, MPI_DOUBLE, id - 1, R_TO_L, MPI_COMM_WORLD));
             CHECK(MPI_Recv(&nextStep[0], 1, MPI_DOUBLE, id - 1, L_TO_R, MPI_COMM_WORLD, &status));
         } else {
-            nextStep[0] = 0.0; // master hat ganz links die boundary cond 0 und brauch die niemandem schicken
+            // MASTER is the "leftmost" process and has no left neighbor but the boundary condition
+            nextStep[0] = 0.0;
         }
 
         if (id != LAST) {
-            CHECK(MPI_Send(&nextStep[right - left - 1], 1, MPI_DOUBLE, id + 1, L_TO_R, MPI_COMM_WORLD)); // meinen rechten verschicken
+            // exchange border values with the right neighbor
+            CHECK(MPI_Send(&nextStep[right - left - 1], 1, MPI_DOUBLE, id + 1, L_TO_R, MPI_COMM_WORLD));
             CHECK(MPI_Recv(&nextStep[right - left], 1, MPI_DOUBLE, id + 1, R_TO_L, MPI_COMM_WORLD, &status));
         } else {
-            nextStep[right - left] = 0.0 // der letzte prozess hat ganz rechts die boundary cond 0 und brauch die niemandem schicken
+            // last process is the "rightmost" and has no right neighbor but the boundary condition
+            nextStep[right - left] = 0.0
         }
 
         // alle einen zeitschritt in die past kopieren
@@ -360,11 +363,13 @@ void initWaveConditions(int id, int numberOfProcesses) {
     const int MASTER = 0;
     const int LAST = numberOfProcesses - 1;
 
+    // broadcast the settings to all processes
     CHECK(MPI_Bcast(&NPOINTS_GLOBAL, 1, MPI_INT, MASTER, MPI_COMM_WORLD));
     CHECK(MPI_Bcast(&TPOINTS, 1, MPI_INT, MASTER, MPI_COMM_WORLD));
     CHECK(MPI_Bcast(&C_SQUARED, 1, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
     CHECK(MPI_Bcast(&DELTA_X, 1, MPI_DOUBLE, MASTER, MPI_COMM_WORLD));
 
+    // calculate left and right border for every process
     left = (   id       * ( NPOINTS_GLOBAL - 1 ) ) / numberOfProcesses;
     right = ( ( id + 1 ) * ( NPOINTS_GLOBAL - 1 ) ) / numberOfProcesses;
 
@@ -373,14 +378,18 @@ void initWaveConditions(int id, int numberOfProcesses) {
     }
     NPOINTS_LOCAL = right + 1 - left;
 
+    // allocate space for local arrays
     const size_t bufSize = NPOINTS_LOCAL * sizeof(double);
-
     previousStep = ( double * ) malloc(bufSize);
     currentStep = ( double * ) malloc(bufSize);
     nextStep = ( double * ) malloc(bufSize);
 
-    u_global = (double *) malloc(NPOINTS_GLOBAL * sizeof(double));
+    // master needs another global array to collect everything in the end
+    if (id == MASTER) {
+        u_global = (double *) malloc(NPOINTS_GLOBAL * sizeof(double));
+    }
 
+    // initialize the first time step
     for (int k = 0; k <= right - left; k++ ) {
         x = (k + left) * DELTA_X;
         previousStep[k] = waveInitFunc(x);
@@ -391,15 +400,15 @@ void initWaveConditions(int id, int numberOfProcesses) {
 void finalizeWave(int id, int numberOfProcesses) {
 
 
-
-    // alle einsammeln
+    // if Master, collect all others
     if ( id == MASTER) {
 
+        // write own results to global array first
         for ( i = 0; i <= right; i++ ) {
             u_global[i] = currentStep[i];
         }
 
-        // ab 1, weil 0 ist ja master
+        // recieve results from every other process and write it
         for (i = 1; i < numberOfProcesses; i++ ) {
 
             // man kann nich einfach so die werte schicken, weil master nich weiß
@@ -421,7 +430,7 @@ void finalizeWave(int id, int numberOfProcesses) {
         }
         free (u_global);
 
-    } else { // nicht master prozesse
+    } else { // if not master, send to master
 
         buffer[0] = left; // startindex im globalen array
         buffer[1] = NPOINTS_LOCAL; // wieviele

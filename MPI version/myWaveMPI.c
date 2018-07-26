@@ -7,7 +7,6 @@
  * @brief This file contains the main MPI program
  */
 
-
 #include "myWaveMPI.h"
 
 int main(int argc, char **argv) {
@@ -15,11 +14,9 @@ int main(int argc, char **argv) {
     int id;
     int numberOfProcesses;
 
-    double wtime;
-
-    MPI_Init ( &argc, &argv );
-    MPI_Comm_rank ( MPI_COMM_WORLD, &id );
-    MPI_Comm_size ( MPI_COMM_WORLD, &numberOfProcesses );
+    MPI_Init (&argc, &argv);
+    MPI_Comm_rank (MPI_COMM_WORLD, &id);
+    MPI_Comm_size (MPI_COMM_WORLD, &numberOfProcesses);
 
     const int MASTER = 0;
 
@@ -42,12 +39,13 @@ int main(int argc, char **argv) {
 
     } else {
 
-        wtime = MPI_Wtime();
+        double waveTime;
+
         initWaveConditions(id, numberOfProcesses);
-        simulateNumberOfTimeSteps();
+        waveTime = simulateNumberOfTimeSteps();
 
         if (id == MASTER) {
-            printf ("Elapsed wallclock time was %g seconds\n", MPI_Wtime() - wtime);
+            printf ("Elapsed wallclock time was %g seconds\n", waveTime);
         }
 
         finalizeWave(id, numberOfProcesses);

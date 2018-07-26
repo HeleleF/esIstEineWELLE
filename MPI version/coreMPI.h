@@ -10,8 +10,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include <string.h>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 # include "mpi.h"
 
@@ -64,14 +66,14 @@ void checkParams(void);
 void initWaveConditions(void);
 
 /**
-  * Simulate one time step with the wave equation
+  * Simulates one time step with the wave equation
   */
 void simulateOneTimeStep(int holdflag);
 
 /**
-  * Call simulateOneTimeStep() a specified number of times
+  * Calls simulateOneTimeStep() a specified number of times
   */
-void simulateNumberOfTimeSteps(void);
+double simulateNumberOfTimeSteps(void);
 
 /**
   * Frees the memory from the time step arrays

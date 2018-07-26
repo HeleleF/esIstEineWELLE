@@ -24,8 +24,6 @@
        }                                                  \
 }                                                         \
 
-const double PI = 3.14159265359; // gibts schon in math.h?
-
     int right;
     int left;
 
@@ -307,7 +305,7 @@ void getUserInputOrConfig(int numberofargc, char** argv) {
 }
 
 double waveInitFunc(double x) {
-   	return (amplitude * sin(2*x*PI*periods/L));
+   	return (amplitude * sin(2 * x * M_PI * periods / L));
 }
 
 void simulateOneTimeStep(int holdflag) {
@@ -335,19 +333,23 @@ void simulateOneTimeStep(int holdflag) {
             nextStep[right - left] = 0.0
         }
 
-        // alle einen zeitschritt in die past kopieren
+        // copy values one step "into the past"
         for (int j = 0; j <= right - left; j++) {
             previousStep[j] = currentStep[j];
             currentStep[j] = nextStep[j];
         }
 }
 
-void simulateNumberOfTimeSteps() {
+double simulateNumberOfTimeSteps() {
+
+    double wtime = MPI_Wtime();
 
     // time steps
     for (int i = 1; i < TPOINTS; ++i) {
         simulateOneTimeStep(0);
     }
+
+    return (MPI_Wtime() - wtime);
 }
 
 void outputNew() {

@@ -2,7 +2,7 @@
  * @file core.h
  * @author Chris Rebbelin s0548921
  * @date 2018-07-01
- * @brief contains the main calculation logic for the wave
+ * @brief header file for the main calculation logic in @file core.c
  */
 
 #ifndef __CORE_H_
@@ -10,9 +10,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include <string.h>
+#include <time.h>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 
 /**
@@ -64,14 +66,17 @@ void checkParams(void);
 void initWaveConditions(void);
 
 /**
-  * Simulate one time step with the wave equation
+  * Simulates one time step with the wave equation
+  * @param holdflag If not 0, indicates that the point at this x coordinate should be fixed ("hold")
   */
 void simulateOneTimeStep(int holdflag);
 
 /**
-  * Call simulateOneTimeStep() a specified number of times
+  * Calls simulateOneTimeStep() a specified number of 
+  * 
+  * @return The elapsed time in seconds
   */
-void simulateNumberOfTimeSteps(void);
+double simulateNumberOfTimeSteps(void);
 
 /**
   * Frees the memory from the time step arrays
@@ -88,6 +93,11 @@ void resetWave(void);
   * Prints the new time step array values to console
   */
 void outputNew(void);
+
+/**
+  * Performs a benchmark
+  */
+void performBenchmark(void);
 
 /**
   * Returns the current state of the wave values.
@@ -123,5 +133,12 @@ double getLAMBDA(void);
   * @return Whether to show the wave or not
   */
 int useGUI(void);
+
+/**
+  * Returns the current state of the doBenchmark flag.
+  *
+  * @return Whether to perform a benchmark or not
+  */
+int doBench(void);
 
 #endif

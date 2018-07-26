@@ -18,29 +18,21 @@
 
 #define DEFAULT_SETTINGS_FILE_PATH "settings.txt"
 
-const double PI = 3.14159265359;
+#define BENCHMARK_FILE "benchResults.txt"
 
-int periods;
-int amplitude;
 
+// time step arrays
 double *previousStep, *currentStep, *nextStep;
 
-int useGui, printvalues;
-
-int NPOINTS; //number of points on the string (i)
-int TPOINTS; // number of time steps
-
-double DELTA_X, lambda; //delta x, dx
+// setting values
+int L, NPOINTS, TPOINTS, periods, amplitude, useGui, printvalues, doBenchmark;
 
 const double DELTA_T = 1.0;
-
-int L;
-
-double C, C_SQUARED, SPEED;
+double DELTA_X, lambda, C, C_SQUARED, SPEED;
 
 
 double waveInitFunc(double x) {
-   	return (amplitude * sin(2*x*PI*periods/L));
+   	return (amplitude * sin(2 * x * M_PI * periods / L));
 }
 
 void outputHelpMessage() {
@@ -58,7 +50,8 @@ void outputHelpMessage() {
     printf("\tLAMBDA\t\t\tThe damping factor for the sine wave\t\t\t\t0 (no damping)\n");
 	printf("\tSHOW_GUI\t\tShow the visualisation of the wave\t\t\t\t1 (true)\n");
 	printf("\tPRINT_VALUES\t\tPrint final values to console\t\t\t\t\t0 (false)\n\n");
-	printf("To perform benchmarks, use './myWave -b [-s SPEED] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA]'\n");
+	printf("From cmd line: './myWave [-s SPEED] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA] [-u SHOW_GUI] [-v PRINTVALUES]'\n\n");
+    printf("To perform benchmarks, use './myWave -b TIMESTEPS POINTS' or './myWave --benchmark TIMESTEPS POINTS'\n");
 	printf("To show this message, use './myWave -h' or './myWave --help'\n");
 }
 
@@ -66,16 +59,18 @@ void getFromSettingsFile(char *configPath) {
 
     const int MAXLINE = 200;
 
-
     FILE * filePointer;
     char buffer[MAXLINE], configKey[50], configValue[50];
     int i, count;
 
-    filePointer = fopen(configPath,"r");
+    // try to open the file
+    filePointer = fopen(configPath, "r");
     if(NULL == filePointer) {
         printf("[ERROR] Could not get file '%s'!\n", configPath);
+        exit(EXIT_FAILURE);
     }
 
+    // read the contents
     while(NULL != fgets(buffer, MAXLINE, filePointer)) {
         count = 0;
         i = 0;
@@ -100,6 +95,7 @@ void getFromSettingsFile(char *configPath) {
         }
         configValue[i-count] = '\0';
 
+        // set the corresponding setting
         if (0 == strcmp(configKey, "SPEED")) {
             SPEED = atof(configValue);
         } else if (0 == strcmp(configKey, "NUMBER_OF_TIME_STEPS")) {
@@ -127,24 +123,53 @@ void getFromSettingsFile(char *configPath) {
 void getFromCmdLine(int nargc, char** argv) {
 
         // check cmdline arguments
-        if (0 == strcmp(argv[1], "-c") || 0 == strcmp(argv[1], "--use-config-file")) {
+        if (0 == strcmp(argv[1], "--print-header-only")) {
+
+            printf("Time(ms) Stddev Options\n");
+            exit(EXIT_SUCCESS);
+
+        } else if (0 == strcmp(argv[1], "-c") || 0 == strcmp(argv[1], "--use-config-file")) {
 
             // use custom settings file
             getFromSettingsFile(argv[2]);
 
         } else if (0 == strcmp(argv[1], "-h") || 0 == strcmp(argv[1], "--help")) {
 
+            // print help message and exit
             outputHelpMessage();
             exit(EXIT_SUCCESS);
 
         } else if (0 == strcmp(argv[1], "-v") || 0 == strcmp(argv[1], "--version")) {
 
+            // print version and exit
             printf("Wave equation - Psys18\nChris Rebbelin 2018\nVersion 0.1\n");
             exit(EXIT_SUCCESS);
 
         } else if (0 == strcmp(argv[1], "-b") || 0 == strcmp(argv[1], "--benchmark")) {
 
-            for (int i = 2; i < nargc; i++) {
+            if (nargc == 4) {
+
+                doBenchmark = 1;
+
+                // only number of timesteps and points can be set in benchmarks
+                // all other values are default
+                TPOINTS = atoi(argv[2]);
+                NPOINTS = atoi(argv[3]);
+
+                // visualization is disabled
+                useGui = 0;
+
+            } else {
+
+                // print help message and exit
+                outputHelpMessage();
+                exit(EXIT_FAILURE);
+            }
+
+        } else {
+
+            // iterate over all argv
+            for (int i = 1; i < nargc; i++) {
 
                 if (0 == strcmp(argv[i], "-s") || 0 == strcmp(argv[i], "--speed")) {
 
@@ -174,22 +199,19 @@ void getFromCmdLine(int nargc, char** argv) {
 
                     lambda = atof(argv[++i]);
 
+                } else if (0 == strcmp(argv[i], "-u") || 0 == strcmp(argv[i], "--usegui")) {
+
+                    useGui = atoi(argv[++i]);
+
+                } else if (0 == strcmp(argv[i], "-v") || 0 == strcmp(argv[i], "--printvalues")) {
+
+                    printvalues = atoi(argv[++i]);
+
                 } else {
 
                     printf("Unrecognized argument: %s\n", argv[i]);
-                    exit(EXIT_FAILURE);
                 }
-
             }
-
-            // disabled for benchmarks
-            useGui = 0;
-            printvalues = 0;
-
-        } else {
-
-            printf("Unrecognized argument: %s\n", argv[1]);
-            exit(EXIT_FAILURE);
         }
 }
 
@@ -231,12 +253,12 @@ void checkParams() {
 	}
 
     if (lambda < 0) {
-        printf("[ERROR] Dampening factor must not be negative!\n");
+        printf("[ERROR] Damping factor must not be negative!\n");
         exit(EXIT_FAILURE);
     }
 
     if (lambda > MAX_LAMBDA) {
-        printf("[ERROR] Dampening factor must not be greater than %.2f!\n", MAX_LAMBDA);
+        printf("[ERROR] Damping factor must not be greater than %.2f!\n", MAX_LAMBDA);
         exit(EXIT_FAILURE);
     }
 
@@ -245,8 +267,10 @@ void checkParams() {
 		exit(EXIT_FAILURE);
 	}
 
+    // calculate delta x
 	DELTA_X = (L / NPOINTS);
 
+    // calculate c^2
 	C = (DELTA_T / DELTA_X) * SPEED;
 	C_SQUARED = C * C;
 
@@ -272,9 +296,10 @@ void getUserInputOrConfig(int numberofargc, char** argv) {
 	NPOINTS = 1000;
 	periods = 5;
 	amplitude = L / 4;
-    lambda = 0; //1 / (double) TPOINTS;
+    lambda = 0;
 	useGui = 1;
     printvalues = 0;
+    doBenchmark = 0;
 
     if (numberofargc > 1) {
 
@@ -310,35 +335,41 @@ void simulateOneTimeStep(int holdflag) {
     for (i = 1; i < NPOINTS; i++) {
 
         if (holdflag == i) {
+            // Point at holdflag is fixed, so don't calculate a new position for it, just use the old one
             nextStep[holdflag] = currentStep[holdflag];
         } else {
             nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + C_SQUARED * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
         }   
     }
 
-	// update boundary condition
+	// update boundary conditions
     nextStep[0] = 0.0;
     nextStep[NPOINTS] = 0.0;
 
+    // copy values one step "into the past"
     double *tempStep = previousStep;
     previousStep = currentStep;
     currentStep = nextStep;
     nextStep = tempStep;
-
-    //outputNew();
-
 }
 
-void simulateNumberOfTimeSteps() {
+double simulateNumberOfTimeSteps() {
 
-    // time steps
+    struct timespec start, end;
+
+    clock_gettime(CLOCK_REALTIME, &start);
+
     for (int i = 1; i < TPOINTS; ++i) {
         simulateOneTimeStep(0);
     }
 
+    clock_gettime(CLOCK_REALTIME, &end);
+
     if (printvalues) {
     	outputNew();
     }
+
+    return ((end.tv_nsec - mid.tv_nsec) / 1E9 + (end.tv_sec - mid.tv_sec));
 }
 
 void finalizeWave() {
@@ -346,7 +377,6 @@ void finalizeWave() {
     free(previousStep);
     free(currentStep);
     free(nextStep);
-
 }
 
 void resetWave() {
@@ -369,9 +399,52 @@ void resetWave() {
 void outputNew() {
 
 	printf("####Current Values:####\n");
-    for (int l = 0; l < NPOINTS+1; ++l) {
+    for (int l = 0; l < NPOINTS + 1; ++l) {
         printf("%4d => %6.6f\n", l, currentStep[l]);
     }
+}
+
+void performBenchmark() {
+
+    const int RERUNS = 10;
+    double runtime[RERUNS] = {0.0};
+
+    double mean = 0.0;
+    double stddev = 0.0;
+
+    initWaveConditions();
+
+    // run repeatedly
+    for (int i = 0; i < RERUNS; i++) {
+        runtime[i] = simulateNumberOfTimeSteps();
+        resetWave();
+    }
+
+    finalizeWave();
+
+    // calculate run time statistics
+    for (int i = 0; i < RERUNS; i++) {
+        mean += runtime[i];
+    }
+    mean = mean / RERUNS;
+
+    for (int i = 0; i < RERUNS; i++) {
+        stddev += pow(runtime[i] - mean, 2);
+    }
+    stddev = sqrt(stddev / RERUNS);
+
+    printf("%lf %lf\n", mean, stddev);
+
+    FILE *fp;
+    fp = fopen(BENCHMARK_FILE, "a");
+
+    if (NULL == fp) {
+        printf("[ERROR] Could not get file '%s'!\n", BENCHMARK_FILE);
+        exit(EXIT_FAILURE);
+    }
+ 
+    fprintf(fp, "Running for %5d timesteps with %10d points took %5.5f seconds with stddev = %5.5f after %d reruns.\n", TPOINTS, NPOINTS, mean, stddev, RERUNS);
+    fclose(fp);
 }
 
 double * getStep() {
@@ -392,4 +465,8 @@ double getLAMBDA() {
 
 int useGUI() {
     return useGui;
+}
+
+int doBench() {
+    return doBenchmark;
 }

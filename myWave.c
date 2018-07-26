@@ -1,5 +1,5 @@
 /**
- * Implements the main program and visualisation to the user
+ * Implements the main program and visualisation
  *
  * @file myWave.c
  * @author Chris Rebbelin s0548921
@@ -28,7 +28,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
 		exit(EXIT_FAILURE);
     };
 
-    // init text specific
+    // init text specific sdl
     if(TTF_Init() == EXIT_FAILURE) {
 
         printf("TTF_Init Error: %s\n", TTF_GetError());
@@ -36,7 +36,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
         exit(EXIT_FAILURE);
     };
 
-    // init image specific
+    // init image specific sdl
 	if (IMG_Init((IMG_INIT_JPG | IMG_INIT_PNG) != (IMG_INIT_JPG | IMG_INIT_PNG))) {
 
 		printf("Initialising SDL_image failed. Error: \n%s\n", IMG_GetError());
@@ -45,7 +45,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
 		exit(EXIT_FAILURE);
 	}
 
-    // create window
+    // create the window
     *win = SDL_CreateWindow("1D Wave equation - psys18", 0, 0, MY_WINDOW_WIDHT, MY_WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if(*win == NULL) {
 
@@ -56,7 +56,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
 		exit(EXIT_FAILURE);
     }
 
-    // create rednerer
+    // create the renderer
     *ren = SDL_CreateRenderer(*win, -1, SDL_RENDERER_ACCELERATED);
     if(*ren == NULL) {
 
@@ -68,6 +68,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
 		exit(EXIT_FAILURE);
     }
 
+    // load the font
     *fon = TTF_OpenFont("Ubuntu-L.ttf", 20);
     if(*fon == NULL) {
 
@@ -94,8 +95,8 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon) {
 		exit(EXIT_FAILURE);
     }
 
+    // set window icon
     SDL_SetWindowIcon(*win, icon);
-    //SDL_FreeSurface(icon);
 }
 
 void doGraphics() {
@@ -107,59 +108,63 @@ void doGraphics() {
     SDL_Renderer* gRenderer = NULL;
 
     // the text font
-    TTF_Font *font = NULL;
-
-    SDL_Surface *textSurface = NULL;
-
-    SDL_Texture *pauseTexture = NULL;
+    TTF_Font* font = NULL;
 
     initSdlVars(&gWindow, &gRenderer, &font);
 
     int w = MY_WINDOW_WIDHT;
     int h = MY_WINDOW_HEIGHT;
 
-    int texW, texH;
-
-    const int fps = 24;
-    const Uint32 ticksPerFrame = 1000 / fps;
-
+    // constant setting values
     const int tpoints = getTPOINTS();
     const int npoints = getNPOINTS();
-    int currentTimeStep = 1;
-
     const double lambda = getLAMBDA();
 
+    // time counter
+    int currentTimeStep = 1;
+
+    // init status texture
     const SDL_Color textColor = {0, 255, 0};
-    textSurface = TTF_RenderText_Solid(font, "Das ist mein Text", textColor);
+    int texW, texH;
+
+    SDL_Surface *textSurface = NULL;
+    SDL_Texture *pauseTexture = NULL;
+
+    textSurface = TTF_RenderText_Solid(font, "Running", textColor);
     pauseTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
 
     SDL_QueryTexture(pauseTexture, NULL, NULL, &texW, &texH);
     SDL_Rect textrect = {500, 500, texW, texH};
 
+    // status flags
     int run = 1;
     int doPause = 0;
-
+    int showAxis = 0;
     int hold = 0;
 
+    // mouse click coordinates
     int mX, mY;
 
-    int showAxis = 0;
-
-    double prev, now;
-
+    // damping factor
     double z = 1.0;
 
+    // current wave values
     double* currentSimulationStep;
+    double prev, now;
+
+    // variables for framerate
+    const int fps = 24;
+    const Uint32 ticksPerFrame = 1000 / fps;
 
     static Uint32 lastFrameTick = 0;
     Uint32 currentFrameTick, elapsedTicks;
 
-    // event loop
+    // main event loop
     while(run) {
 
         static SDL_Event event;
 
-		// poll for sdl events
+		// poll for sdl events and handle them
         while(SDL_PollEvent(&event)) {
 
             switch (event.type) {
@@ -183,9 +188,9 @@ void doGraphics() {
 
                 	   case SDLK_p:
                 	        if (doPause) {
-                                textSurface = TTF_RenderText_Solid(font, "", textColor);
+                                textSurface = TTF_RenderText_Solid(font, "Running", textColor);
                             } else {
-                                textSurface = TTF_RenderText_Solid(font, "Pause", textColor);
+                                textSurface = TTF_RenderText_Solid(font, "Paused", textColor);
                             }
                             
                             doPause = !doPause; 
@@ -211,17 +216,20 @@ void doGraphics() {
 
                 case SDL_MOUSEBUTTONDOWN:
 
+                    // if already holding a point, release it
                     if (hold) {
                         hold = 0;
                         break;
                     }
 
+                    // get coordinates of the click
                     mX = event.button.x;
                     mY = event.button.y;
-                    if (mX - WIDTH_OFFSET < npoints && mX > WIDTH_OFFSET 
-                        && abs(currentSimulationStep[mX - WIDTH_OFFSET] * z + (h / 2) - mY) < HOLD_TOLERANCE) {
+
+                    // check if click is "near" a point on the wave
+                    if (mX - WIDTH_OFFSET < npoints && mX > WIDTH_OFFSET && abs(currentSimulationStep[mX - WIDTH_OFFSET] * z + (h / 2) - mY) < HOLD_TOLERANCE) {
+                        // if yes, mark this point as "hold"
                         hold = mX - WIDTH_OFFSET;
-                        //
                     }
                     break;
 
@@ -284,7 +292,7 @@ void doGraphics() {
 
         }
 
- 		// render
+ 		// render all
         SDL_RenderCopy(gRenderer, pauseTexture, NULL, &textrect);
         SDL_RenderPresent(gRenderer);
 
@@ -321,8 +329,12 @@ void doGraphics() {
 int main(int argc, char **argv) {
 
     getUserInputOrConfig(argc, argv);
-    
 
+    if (doBench()) {
+        performBenchmark();
+        return EXIT_SUCCESS;
+    }
+    
     if (useGUI()) {
 
         initWaveConditions();
@@ -332,32 +344,19 @@ int main(int argc, char **argv) {
         printf("\tR\t\treset to initial sine wave\n");
         printf("\tQ / ESC\t\tquit the program\n");
 
+        // start main graphics loop
         doGraphics();
 
     } else {
 
-        // timer variables
-        struct timespec start, mid, end;
-        double elapsedTime, waveTime;
-
-        clock_gettime(CLOCK_REALTIME, &start);
-
+        double waveTime;
         initWaveConditions();
 
-        clock_gettime(CLOCK_REALTIME, &mid);
-
-        simulateNumberOfTimeSteps();
-
-        clock_gettime(CLOCK_REALTIME, &end);
-
-        elapsedTime = (end.tv_nsec - start.tv_nsec) / 1E9 + (end.tv_sec - start.tv_sec);
-        waveTime = (end.tv_nsec - mid.tv_nsec) / 1E9 + (end.tv_sec - mid.tv_sec);
-
-        printf("Time total: %f seconds\n", elapsedTime);
-        printf("\tTime init: %f seconds\n", elapsedTime - waveTime);
-        printf("\tTime wave: %f seconds\n", waveTime);
+        waveTime = simulateNumberOfTimeSteps();
+        printf("Time total: %f seconds\n", waveTime);
     }
 
+    // cleanup
     finalizeWave();
 
     return EXIT_SUCCESS;

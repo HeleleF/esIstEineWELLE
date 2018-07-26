@@ -2,7 +2,7 @@
  * @file myWave.h
  * @author Chris Rebbelin s0548921
  * @date 2018-07-01
- * @brief contains the main program
+ * @brief header file for the main program in @file myWave.c
  */
 
 #ifndef __WAVE_H_
@@ -11,8 +11,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-
-#include <time.h>
 
 #include "core.h"
 
@@ -23,7 +21,7 @@
 void doGraphics(void);
 
 /**
-  * Initializes all needed SDL variables.
+  * Initializes the main SDL variables.
   *
   * @param win pointer to the SDL_Window
   * @param ren pointer to the SDL_Renderer

@@ -10,8 +10,6 @@
 #include <omp.h>
 #include "core.h"
 
-#define USE_OPENMP
-
 #define MAX_POINTS 10000000
 
 #define MAX_LAMBDA 0.1
@@ -50,7 +48,7 @@ void outputHelpMessage() {
     printf("\tLAMBDA\t\t\tThe damping factor for the sine wave\t\t\t\t0 (no damping)\n");
 	printf("\tSHOW_GUI\t\tShow the visualisation of the wave\t\t\t\t1 (true)\n");
 	printf("\tPRINT_VALUES\t\tPrint final values to console\t\t\t\t\t0 (false)\n\n");
-	printf("From cmd line: './myWave [-s SPEED] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA] [-u SHOW_GUI] [-v PRINTVALUES]'\n\n");
+	printf("From cmd line: './myWave [-s SPEED] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA] [-u SHOWGUI] [-v PRINTVALUES]'\n\n");
     printf("To perform benchmarks, use './myWave -b TIMESTEPS POINTS' or './myWave --benchmark TIMESTEPS POINTS'\n");
 	printf("To show this message, use './myWave -h' or './myWave --help'\n");
 }
@@ -65,13 +63,13 @@ void getFromSettingsFile(char *configPath) {
 
     // try to open the file
     filePointer = fopen(configPath, "r");
-    if(NULL == filePointer) {
+    if (NULL == filePointer) {
         printf("[ERROR] Could not get file '%s'!\n", configPath);
         exit(EXIT_FAILURE);
     }
 
     // read the contents
-    while(NULL != fgets(buffer, MAXLINE, filePointer)) {
+    while (NULL != fgets(buffer, MAXLINE, filePointer)) {
         count = 0;
         i = 0;
 
@@ -123,12 +121,7 @@ void getFromSettingsFile(char *configPath) {
 void getFromCmdLine(int nargc, char** argv) {
 
         // check cmdline arguments
-        if (0 == strcmp(argv[1], "--print-header-only")) {
-
-            printf("Time(ms) Stddev Options\n");
-            exit(EXIT_SUCCESS);
-
-        } else if (0 == strcmp(argv[1], "-c") || 0 == strcmp(argv[1], "--use-config-file")) {
+        if (0 == strcmp(argv[1], "-c") || 0 == strcmp(argv[1], "--use-config-file")) {
 
             // use custom settings file
             getFromSettingsFile(argv[2]);
@@ -329,9 +322,7 @@ void simulateOneTimeStep(int holdflag) {
 
     int i;
 
-    #if defined(USE_OPENMP) 
     #pragma omp parallel for shared(nextStep, currentStep, previousStep, C_SQUARED, NPOINTS, holdflag) private(i)
-    #endif
     for (i = 1; i < NPOINTS; i++) {
 
         if (holdflag == i) {
@@ -369,7 +360,7 @@ double simulateNumberOfTimeSteps() {
     	outputNew();
     }
 
-    return ((end.tv_nsec - mid.tv_nsec) / 1E9 + (end.tv_sec - mid.tv_sec));
+    return ((end.tv_nsec - start.tv_nsec) / 1E9 + (end.tv_sec - start.tv_sec));
 }
 
 void finalizeWave() {
@@ -407,7 +398,9 @@ void outputNew() {
 void performBenchmark() {
 
     const int RERUNS = 10;
-    double runtime[RERUNS] = {0.0};
+    double runtime[RERUNS]; 
+
+    memset(runtime, 0, RERUNS);
 
     double mean = 0.0;
     double stddev = 0.0;

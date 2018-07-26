@@ -15,7 +15,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <omp.h>
 # include "mpi.h"
+
+
+void CHECK(int ierr);
 
 /**
   * Calculates the initial sine wave values 
@@ -46,8 +50,10 @@ void getFromCmdLine(int nargc, char** argv);
   *
   * @param numberofargc argument count of the program
   * @param argv arguments of the program
+  * @param pid ID of the mpi process
+  * @param pnum number of mpi processes
   */
-void getUserInputOrConfig(int numberofargc, char** argv);
+void getUserInputOrConfig(int numberofargc, char** argv, int pid, int pnum);
 
 /**
   * Outputs a help message for the user
@@ -92,6 +98,17 @@ void resetWave(void);
 void outputNew(void);
 
 /**
+  * Performs a benchmark
+  */
+void performBenchmark(void);
+
+/**
+  * collects calculated values from all processes 
+  * into a global array in the master process
+  */
+void collectWave(void);
+
+/**
   * Returns the current state of the wave values.
   *
   * @return A pointer to array of the current values
@@ -125,5 +142,12 @@ double getLAMBDA(void);
   * @return Whether to show the wave or not
   */
 int useGUI(void);
+
+/**
+  * Returns the current state of the doBenchmark flag.
+  *
+  * @return Whether to perform a benchmark or not
+  */
+int doBench(void);
 
 #endif

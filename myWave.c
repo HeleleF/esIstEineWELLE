@@ -13,6 +13,7 @@
 #define MY_WINDOW_HEIGHT 720
 
 #define WIDTH_OFFSET 20
+#define TEXT_OFFSET 20
 
 #define Y_AXIS_LENGTH 256
 
@@ -134,7 +135,7 @@ void doGraphics() {
     pauseTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
 
     SDL_QueryTexture(pauseTexture, NULL, NULL, &texW, &texH);
-    SDL_Rect textrect = {500, 500, texW, texH};
+    SDL_Rect textrect = {w - texW - TEXT_OFFSET, h - texH - TEXT_OFFSET, texW, texH};
 
     // status flags
     int run = 1;
@@ -200,13 +201,24 @@ void doGraphics() {
                             textrect.w = texW;
                             textrect.h = texH;
 
-                		  break;
+                		  	break;
 
                         case SDLK_r:
                           resetWave();
                           currentTimeStep = 1;
                           hold = 0;
-                          doPause = 0;
+
+                          if (doPause) { 
+                          	doPause = 0;
+
+                          	textSurface = TTF_RenderText_Solid(font, "Running", textColor);
+                          	pauseTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+
+                          	SDL_QueryTexture(pauseTexture, NULL, NULL, &texW, &texH);
+                          	textrect.w = texW;
+                          	textrect.h = texH;                        	
+                          }
+
                           break;
 
                 	   default: 
@@ -243,6 +255,9 @@ void doGraphics() {
                         SDL_FillRect(content, &rect, 0x000000FF);
 
                         SDL_UpdateWindowSurface(gWindow);
+
+                        textrect.x = w - texW - TEXT_OFFSET;
+                       	textrect.y = h - texH - TEXT_OFFSET;
                     }
                     break;
 

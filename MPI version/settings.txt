@@ -20,7 +20,7 @@ SPEED 0.8
 # Use 0 to simulate the wave in an endless loop
 # The default value is: 1000.
 #
-NUMBER_OF_TIME_STEPS 0
+NUMBER_OF_TIME_STEPS 1000
 
 #---------------------------------------------------------------------------
 # Right interval border of the x-Axis -> [0, LINE_INTERVAL_END]
@@ -68,7 +68,7 @@ LAMBDA 0
 #
 # The default value is: 1 (true).
 #
-SHOW_GUI 1
+SHOW_GUI 0
 
 #---------------------------------------------------------------------------
 # Print current values to console
@@ -76,4 +76,4 @@ SHOW_GUI 1
 #
 # The default value is: 0 (false).
 #
-PRINT_VALUES 0
+PRINT_VALUES 1

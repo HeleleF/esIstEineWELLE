@@ -18,7 +18,7 @@
   * Visualizes the wave equation with the given
   * parameters with the SDL library.
   */
-void doGraphics(void);
+//void doGraphics(void);
 
 /**
   * Initializes all needed SDL variables.

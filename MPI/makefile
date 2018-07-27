@@ -1,7 +1,7 @@
 # makefile
 
 # The name of the main executable
-TARGET=myWave
+TARGET=myWaveMPI
 
 # Flags and stuff, change as required
 OPTIMIZE=-O3

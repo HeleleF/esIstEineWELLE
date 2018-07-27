@@ -60,7 +60,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     }
 
     // load the font
-    *fon = TTF_OpenFont("Ubuntu-L.ttf", 20);
+    *fon = TTF_OpenFont(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE);
     if (*fon == NULL)
     {
         printf("TTF_OpenFont Error: %s\n", TTF_GetError());
@@ -73,7 +73,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     }
 
     // create window icon
-    SDL_Surface *icon = IMG_Load("psysIcon.png");
+    SDL_Surface *icon = IMG_Load(ICON_PATH);
     if (icon == NULL)
     {
         printf("SDL_Surface Error: %s\n", SDL_GetError());
@@ -104,7 +104,7 @@ void doGraphics()
 
     initSdlVars(&gWindow, &gRenderer, &font);
 
-    int w = MY_WINDOW_WIDHT;
+    int w = MY_WINDOW_WIDTH;
     int h = MY_WINDOW_HEIGHT;
 
     // constant setting values
@@ -298,9 +298,9 @@ void doGraphics()
         currentSimulationStep = getStep();
 
         // apply damping
-        z = exp((double)-currentTimeStep * lambda);
+        z = exp((double) -currentTimeStep * lambda);
 
-        for (int l = 1; l < npoints + 1; ++l)
+        for (int l = 1; l < npoints; ++l)
         {
 
             prev = currentSimulationStep[l - 1] * z;
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    if (useGui())
+    if (showGui())
     {
 
         initWaveConditions();

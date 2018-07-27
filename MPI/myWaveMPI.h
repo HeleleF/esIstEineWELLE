@@ -13,6 +13,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "coreMPI.h"
+#include <mpi.h>
 
 /**
  * @def MY_WINDOW_WIDTH
@@ -48,6 +49,27 @@
  * Represents the length of the y-Axis in pixel
  */
 #define Y_AXIS_LENGTH 256
+
+/**
+ * @def DEFAULT_FONT_PATH
+ * 
+ * The default font used for the application
+ */
+#define DEFAULT_FONT_PATH "../Ubuntu-L.ttf"
+
+/**
+ * @def DEFAULT_FONT_SIZE
+ * 
+ * The default font size
+ */
+#define DEFAULT_FONT_SIZE 20
+
+/**
+ * @def ICON_PATH
+ * 
+ * The icon path for the application
+ */
+#define ICON_PATH "../psysIcon.png"
 
 /**
   * @brief Visualizes the wave equation with the SDL library

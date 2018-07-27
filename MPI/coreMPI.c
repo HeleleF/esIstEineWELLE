@@ -26,7 +26,7 @@ int id, numberOfProcesses;
 // border values
 int left, right;
 
-const int MASTER = 0;
+const int FIRST = 0;
 int LAST;
 
 MPI_Status status;
@@ -61,7 +61,7 @@ void outputHelpMessage()
 {
     printf("\nHOW TO USE:\n");
     printf("Edit parameters in %s\n", DEFAULT_SETTINGS_FILE_PATH);
-    printf("or use your own settings file with 'mpiexec myWave -c <pathToYourFile>'\n");
+    printf("or use your own settings file with 'mpiexec myWaveMPI -c <pathToYourFile>'\n");
     printf("Available settings\n");
     printf("\tKEY\t\t\tDESCRIPTION\t\t\t\t\t\t\tDEFAULT\n\n");
     printf("\tSPEED\t\t\tThe speed of the wave, has to be between 0 and 1\t\t0.9\n");
@@ -73,9 +73,9 @@ void outputHelpMessage()
     printf("\tLAMBDA\t\t\tThe damping factor for the sine wave\t\t\t\t0 (no damping)\n");
     printf("\tSHOW_GUI\t\tShow the visualisation of the wave\t\t\t\t1 (true)\n");
     printf("\tPRINT_VALUES\t\tPrint final values to console\t\t\t\t\t0 (false)\n\n");
-    printf("From cmd line: 'mpiexec myWave [-s waveSpeed] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA] [-u SHOWGUI] [-v PRINTVALUES]'\n\n");
-    printf("To perform benchmarks, use 'mpiexec myWave -b TIMESTEPS POINTS' or 'mpiexec myWave --benchmark TIMESTEPS POINTS'\n");
-    printf("To show this message, use 'mpiexec myWave -h' or 'mpiexec myWave --help'\n");
+    printf("From cmd line: 'mpiexec myWaveMPI [-s SPEED] [-t TIMESTEPS] [-i INTERVALEND] [-n POINTS] [-p PERIODS] [-a AMPLITUDE] [-l LAMBDA] [-u SHOWGUI] [-v PRINTVALUES]'\n\n");
+    printf("To perform benchmarks, use 'mpiexec myWaveMPI -b TIMESTEPS POINTS' or 'mpiexec myWaveMPI --benchmark TIMESTEPS POINTS'\n");
+    printf("To show this message, use 'mpiexec myWaveMPI -h' or 'mpiexec myWaveMPI --help'\n");
 }
 
 void getFromSettingsFile(char *configPath)
@@ -93,7 +93,7 @@ void getFromSettingsFile(char *configPath)
 
     if (NULL == filePointer)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Could not get file '%s'!\n", configPath);
         }
@@ -131,7 +131,7 @@ void getFromSettingsFile(char *configPath)
         configValue[i - count] = '\0';
 
         // set the corresponding setting
-        if (0 == strcmp(configKey, "waveSpeed"))
+        if (0 == strcmp(configKey, "SPEED"))
         {
             waveSpeed = atof(configValue);
         }
@@ -169,7 +169,7 @@ void getFromSettingsFile(char *configPath)
         }
         else
         {
-            if (id == MASTER)
+            if (id == FIRST)
             {
                 printf("[INFO] Unrecognized settings key: '%s'\n", configKey);
             }
@@ -192,7 +192,7 @@ void getFromCmdLine(int nargc, char **argv)
     else if (0 == strcmp(argv[1], "-h") || 0 == strcmp(argv[1], "--help"))
     {
 
-        if (id == MASTER)
+        if (id == FIRST)
         {
             outputHelpMessage();
         }
@@ -202,7 +202,7 @@ void getFromCmdLine(int nargc, char **argv)
     else if (0 == strcmp(argv[1], "-v") || 0 == strcmp(argv[1], "--version"))
     {
 
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("Wave equation MPI - Psys18\nChris Rebbelin 2018\nVersion 0.1\n");
         }
@@ -229,7 +229,7 @@ void getFromCmdLine(int nargc, char **argv)
         {
 
             // print help message and exit
-            if (id == MASTER)
+            if (id == FIRST)
             {
                 outputHelpMessage();
             }
@@ -291,7 +291,7 @@ void getFromCmdLine(int nargc, char **argv)
             else
             {
 
-                if (id == MASTER)
+                if (id == FIRST)
                 {
                     printf("[INFO] Unrecognized argument: %s\n", argv[i]);
                 }
@@ -305,7 +305,7 @@ void checkParams()
 
     if (waveSpeed <= 0 || waveSpeed >= 1)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Wave equation not stable with c=%.3f!\n", waveSpeed);
         }
@@ -315,7 +315,7 @@ void checkParams()
 
     if (tPoints < 0)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Number of time steps must not be negative!\n");
         }
@@ -325,7 +325,7 @@ void checkParams()
 
     if (intervalEnd < 1)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Right interval border must not be smaller than 1\n");
         }
@@ -335,7 +335,7 @@ void checkParams()
 
     if (nPointsGlobal <= 0)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Number of discrete points must not be negative or zero!\n");
         }
@@ -345,7 +345,7 @@ void checkParams()
 
     if (nPointsGlobal > MAX_POINTS)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Number of discrete points is bigger than the allowed maximum of %d!\n", MAX_POINTS);
         }
@@ -355,7 +355,7 @@ void checkParams()
 
     if (periods < 1)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Period length must not be smaller than 1!\n");
         }
@@ -365,7 +365,7 @@ void checkParams()
 
     if (amplitude < 1)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Amplitude must not be smaller than 1!\n");
         }
@@ -375,7 +375,7 @@ void checkParams()
 
     if (lambda < 0)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Dampening factor must not be negative!\n");
         }
@@ -385,7 +385,7 @@ void checkParams()
 
     if (lambda > MAX_LAMBDA)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Dampening factor must not be greater than %.2f!\n", MAX_LAMBDA);
         }
@@ -395,7 +395,7 @@ void checkParams()
 
     if (!useGui && tPoints == 0)
     {
-        if (id == MASTER)
+        if (id == FIRST)
         {
             printf("[ERROR] Simulating an endless loop is only allowed with visualisation enabled!\n");
         }
@@ -408,7 +408,7 @@ void checkParams()
     c = (DELTA_T / deltaX) * waveSpeed;
     cSquared = c * c;
 
-    if (id == MASTER)
+    if (id == FIRST)
     {
 
         if (tPoints == 0)
@@ -469,7 +469,7 @@ void getUserInputOrConfig(int numberofargc, char **argv, int pid, int pnum)
 
 double waveInitFunc(double x)
 {
-    return (amplitude * sin(2 * x * M_PI * periods / intervalEnd));
+    return (amplitude * sin(2 * x * M_PI * periods / (intervalEnd - 1)));
 }
 
 void initWaveConditions()
@@ -479,7 +479,7 @@ void initWaveConditions()
     left = (id * (nPointsGlobal - 1)) / numberOfProcesses;
     right = ((id + 1) * (nPointsGlobal - 1)) / numberOfProcesses;
 
-    if (id != MASTER)
+    if (id != FIRST)
     {
         left = left - 1;
     }
@@ -487,14 +487,14 @@ void initWaveConditions()
 
     // allocate space for local arrays
     const size_t bufSize = nPointsLocal * sizeof(double);
-    previousStep = (double *)malloc(bufSize);
-    currentStep = (double *)malloc(bufSize);
-    nextStep = (double *)malloc(bufSize);
+    previousStep = (double *) malloc(bufSize);
+    currentStep = (double *) malloc(bufSize);
+    nextStep = (double *) malloc(bufSize);
 
     // master needs another global array to collect everything in the end
-    if (id == MASTER)
+    if (id == FIRST)
     {
-        globalStep = (double *)malloc(nPointsGlobal * sizeof(double));
+        globalStep = (double *) malloc(nPointsGlobal * sizeof(double));
     }
 
     resetWave();
@@ -505,14 +505,14 @@ void simulateOneTimeStep()
 
     int i;
 
-// calculate next time step with wave equation
-#pragma omp parallel for shared(nextStep, currentStep, previousStep, cSquared, right, left) private(i)
+    // calculate next time step with wave equation
+    #pragma omp parallel for shared(nextStep, currentStep, previousStep, cSquared, right, left) private(i)
     for (i = 1; i < right - left; i++)
     {
         nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + cSquared * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
     }
 
-    if (id != MASTER)
+    if (id != FIRST)
     {
         // exchange border values with the left neighbor
         CHECK(MPI_Send(&nextStep[1], 1, MPI_DOUBLE, id - 1, R_TO_L, MPI_COMM_WORLD));
@@ -520,7 +520,7 @@ void simulateOneTimeStep()
     }
     else
     {
-        // MASTER is the "leftmost" process and has no left neighbor but the boundary condition
+        // FIRST is the "leftmost" process and has no left neighbor but the boundary condition
         nextStep[0] = 0.0;
     }
 
@@ -558,7 +558,7 @@ double simulateNumberOfTimeSteps()
 
     elapsed = MPI_Wtime() - wtime;
 
-    if (id == MASTER && printvalues)
+    if (id == FIRST && printvalues)
     {
         outputNew();
     }
@@ -570,7 +570,7 @@ void collectWave()
 {
 
     // if Master, collect all others
-    if (id == MASTER)
+    if (id == FIRST)
     {
 
         // write own results to global array first
@@ -579,7 +579,7 @@ void collectWave()
             globalStep[i] = currentStep[i];
         }
 
-        int cnt = 0;
+        int startIdx, cnt = 0;
 
         // recieve results from every other process and write it
         for (int i = 1; i < numberOfProcesses; i++)
@@ -588,12 +588,13 @@ void collectWave()
             // recieve info about the coming data
             CHECK(MPI_Recv(buffer, 2, MPI_INT, i, INFO, MPI_COMM_WORLD, &status));
 
-            left = buffer[0]; // start index in global array
+            startIdx = buffer[0]; // start index in global array
             cnt = buffer[1];  // how many points to expect
 
             // recieve <count> values and write them into the global array, starting at index <left>
-            CHECK(MPI_Recv(&globalStep[left], cnt, MPI_DOUBLE, i, ACTUAL, MPI_COMM_WORLD, &status));
+            CHECK(MPI_Recv(&globalStep[startIdx], cnt, MPI_DOUBLE, i, ACTUAL, MPI_COMM_WORLD, &status));
         }
+        //outputNew();
     }
     else
     { // if not master, send to master
@@ -612,7 +613,7 @@ void collectWave()
 void finalizeWave()
 {
 
-    if (id == MASTER)
+    if (id == FIRST)
     {
         free(globalStep);
     }
@@ -631,7 +632,7 @@ void resetWave()
     memset(currentStep, 0, nPointsLocal);
     memset(nextStep, 0, nPointsLocal);
 
-    if (id == MASTER)
+    if (id == FIRST)
     {
         memset(globalStep, 0, nPointsGlobal);
     }
@@ -661,9 +662,9 @@ void performBenchmark()
 
     const unsigned short RERUNS = 10;
 
-    double runtime[RERUNS];
+    double runtime[RERUNS + 1];
 
-    memset(runtime, 0, RERUNS);
+    memset(runtime, 0, RERUNS + 1);
 
     double mean = 0.0;
     double stddev = 0.0;
@@ -671,35 +672,20 @@ void performBenchmark()
     initWaveConditions();
 
     // run repeatedly
-    for (int i = 0; i < RERUNS; i++)
+    for (int i = 0; i <= RERUNS; i++)
     {
 
         double etime = simulateNumberOfTimeSteps();
 
-        if (id == MASTER)
+        if (id == FIRST)
         {
             runtime[i] = etime;
         }
         resetWave();
     }
 
-    if (id == MASTER)
+    if (id == FIRST)
     {
-
-        // calculate run time statistics
-        for (int i = 0; i < RERUNS; i++)
-        {
-            mean += runtime[i];
-        }
-        mean = mean / RERUNS;
-
-        for (int i = 0; i < RERUNS; i++)
-        {
-            stddev += pow(runtime[i] - mean, 2);
-        }
-        stddev = sqrt(stddev / RERUNS);
-
-        printf("%lf %lf\n", mean, stddev);
 
         FILE *fp;
         fp = fopen(BENCHMARK_FILE, "a");
@@ -707,10 +693,27 @@ void performBenchmark()
         if (NULL == fp)
         {
             printf("[ERROR] Could not get file '%s'!\n", BENCHMARK_FILE);
+            MPI_Finalize();
             exit(EXIT_FAILURE);
         }
 
-        fprintf(fp, "Running for %5d timesteps with %10d points took %8.5f seconds with stddev = %8.5f after %3d reruns.\n", tPoints, nPointsGlobal, mean, stddev, RERUNS);
+        // calculate run time statistics
+        for (int i = 1; i <= RERUNS; i++)
+        {
+            fprintf(fp, "Run %2d: %10.8f seconds\n", i, runtime[i]);
+            mean += runtime[i];
+        }
+        mean = mean / RERUNS;
+
+        for (int i = 1; i <= RERUNS; i++)
+        {
+            stddev += pow(runtime[i] - mean, 2);
+        }
+        stddev = sqrt(stddev / RERUNS);
+
+        printf("Finished! Mean: %10.8f (Stddev:%10.8f)\n", mean, stddev);
+
+        fprintf(fp, "Running for %5d timesteps with %10d points took %10.8f seconds with stddev = %10.8f after %2d reruns.\n", tPoints, nPointsGlobal, mean, stddev, RERUNS);
         fclose(fp);
     }
 
@@ -719,15 +722,7 @@ void performBenchmark()
 
 double *getStep()
 {
-
-    if (id == MASTER)
-    {
-        return globalStep;
-    }
-    else
-    {
-        return NULL;
-    }
+    return globalStep;
 }
 
 int getNpoints()
@@ -745,7 +740,7 @@ double getLambda()
     return lambda;
 }
 
-int useGui()
+int showGui()
 {
     return useGui;
 }

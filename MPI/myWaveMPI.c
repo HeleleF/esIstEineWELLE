@@ -9,6 +9,12 @@
 
 #include "myWaveMPI.h"
 
+
+const int MASTER = 0;
+
+int id, numberOfProcesses;
+
+
 void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
 {
 
@@ -65,7 +71,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     }
 
     // load the font
-    *fon = TTF_OpenFont("Ubuntu-L.ttf", 20);
+    *fon = TTF_OpenFont(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE);
     if (*fon == NULL)
     {
 
@@ -79,7 +85,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     }
 
     // create window icon
-    SDL_Surface *icon = IMG_Load("psysIcon.png");
+    SDL_Surface *icon = IMG_Load(ICON_PATH);
     if (icon == NULL)
     {
 
@@ -100,12 +106,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
 void doGraphics()
 {
 
-    int run = 1;
-    int doPause = 0;
-
-    if (id == MASTER)
-    {
-        // the window we'll be rendering to
+            // the window we'll be rendering to
         SDL_Window *gWindow = NULL;
 
         // the window renderer
@@ -114,9 +115,10 @@ void doGraphics()
         // the text font
         TTF_Font *font = NULL;
 
-        initSdlVars(&gWindow, &gRenderer, &font);
+SDL_Rect textrect = {0, 0, 0, 0};
+        
 
-        int w = MY_WINDOW_WIDHT;
+        int w = MY_WINDOW_WIDTH;
         int h = MY_WINDOW_HEIGHT;
 
         // constant setting values
@@ -134,17 +136,10 @@ void doGraphics()
         SDL_Surface *textSurface = NULL;
         SDL_Texture *pauseTexture = NULL;
 
-        textSurface = TTF_RenderText_Solid(font, "Running", textColor);
-        pauseTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
-
-        SDL_QueryTexture(pauseTexture, NULL, NULL, &texW, &texH);
-        SDL_Rect textrect = {w - texW - TEXT_OFFSET, h - texH - TEXT_OFFSET, texW, texH};
-
         // status flags
+            int run = 1;
+    int doPause = 0;
         int showAxis = 0;
-
-        // mouse click coordinates
-        int mX, mY;
 
         // damping factor
         double z = 1.0;
@@ -154,19 +149,31 @@ void doGraphics()
         double prev, now;
 
         // variables for framerate
-        const int fps = 24;
+        const int fps = 21;
         const Uint32 ticksPerFrame = 1000 / fps;
 
         static Uint32 lastFrameTick = 0;
         Uint32 currentFrameTick, elapsedTicks;
+
+    if (id == MASTER)
+    {
+
+        initSdlVars(&gWindow, &gRenderer, &font);
+
+                textSurface = TTF_RenderText_Solid(font, "Running", textColor);
+        pauseTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+
+        SDL_QueryTexture(pauseTexture, NULL, NULL, &texW, &texH);
+                                textrect.x = w - texW - TEXT_OFFSET;
+                        textrect.y = h - texH - TEXT_OFFSET;
+                                textrect.w = texW;
+                        textrect.h = texH;
+
     }
 
     // main event loop
     while (run)
     {
-        MPI_Barrier(MPI_COMM_WORLD);
-        MPI_Bcast(&run, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
-        MPI_Bcast(&doPause, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
 
         if (id == MASTER)
         {
@@ -218,7 +225,6 @@ void doGraphics()
                     case SDLK_r:
                         resetWave();
                         currentTimeStep = 1;
-                        hold = 0;
 
                         if (doPause)
                         {
@@ -281,24 +287,30 @@ void doGraphics()
             }
         }
 
+		MPI_Barrier(MPI_COMM_WORLD);
+		MPI_Bcast(&doPause, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
+
         // simulate one time step
         if (!doPause)
         {
             simulateOneTimeStep();
+
             collectWave();
+            MPI_Barrier(MPI_COMM_WORLD);
 
             if (id == MASTER)
             {
                 currentTimeStep++;
             }
         }
+
         if (id == MASTER)
         {
             // get the current values and draw them
             currentSimulationStep = getStep();
 
             // apply damping
-            z = exp((double)-currentTimeStep * lambda);
+            z = exp((double) -currentTimeStep * lambda);
 
             for (int l = 1; l < npoints; ++l)
             {
@@ -321,7 +333,6 @@ void doGraphics()
             if (currentTimeStep == tpoints)
             {
                 run = 0;
-                break;
             }
 
             // check framerate
@@ -336,6 +347,9 @@ void doGraphics()
                 SDL_Delay(ticksPerFrame - elapsedTicks);
             }
         }
+
+        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Bcast(&run, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
     }
 
     if (id == MASTER)
@@ -356,10 +370,6 @@ void doGraphics()
 int main(int argc, char **argv)
 {
 
-    const int MASTER = 0;
-
-    int id, numberOfProcesses;
-
     // init mpi
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &id);
@@ -376,16 +386,18 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    if (useGui())
+    if (showGui())
     {
 
         initWaveConditions();
 
+        if (id == MASTER)
+        {
         printf("\n Controls:\n\tA\t\ttoggle axis\n");
         printf("\tP\t\tpause / continue the visualisation\n");
         printf("\tR\t\treset to initial sine wave\n");
         printf("\tQ / ESC\t\tquit the program\n");
-
+}
         doGraphics();
     }
     else

@@ -43,14 +43,14 @@
  * 
  * The default settings file used for configuration
  */
-#define DEFAULT_SETTINGS_FILE_PATH "settings.txt"
+#define DEFAULT_SETTINGS_FILE_PATH "../settings.txt"
 
 /**
  * @def BENCHMARK_FILE
  * 
  * The default output file used for benchmark results
  */
-#define BENCHMARK_FILE "benchResultsMP.txt"
+#define BENCHMARK_FILE "../benchmark/benchResultsMP.txt"
 
 
 /**
@@ -166,7 +166,7 @@ double getLambda(void);
   *
   * @return Whether to show the wave or not
   */
-int useGui(void);
+int showGui(void);
 
 /**
   * @brief Returns the current state of the benchmark flag

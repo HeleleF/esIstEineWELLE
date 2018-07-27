@@ -12,7 +12,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "core.h"
+#include "coreMP.h"
 
 /**
  * @def MY_WINDOW_WIDTH
@@ -63,6 +63,27 @@
  * the exact wave line pixel.
  */
 #define HOLD_TOLERANCE 20
+
+/**
+ * @def DEFAULT_FONT_PATH
+ * 
+ * The default font used for the application
+ */
+#define DEFAULT_FONT_PATH "../Ubuntu-L.ttf"
+
+/**
+ * @def DEFAULT_FONT_SIZE
+ * 
+ * The default font size
+ */
+#define DEFAULT_FONT_SIZE 20
+
+/**
+ * @def ICON_PATH
+ * 
+ * The icon path for the application
+ */
+#define ICON_PATH "../psysIcon.png"
 
 /**
   * @brief Visualizes the wave equation with the SDL library

@@ -85,7 +85,7 @@ void getFromSettingsFile(char *configPath)
         configValue[i - count] = '\0';
 
         // set the corresponding setting
-        if (0 == strcmp(configKey, "waveSpeed"))
+        if (0 == strcmp(configKey, "SPEED"))
         {
             waveSpeed = atof(configValue);
         }
@@ -357,14 +357,14 @@ void getUserInputOrConfig(int numberofargc, char **argv)
 
 double waveInitFunc(double x)
 {
-    return (amplitude * sin(2 * x * M_PI * periods / intervalEnd));
+    return (amplitude * sin(2 * x * M_PI * periods / (intervalEnd - 1)));
 }
 
 void initWaveConditions()
 {
 
     // initialize arrays
-    const size_t bufSize = (nPoints + 1) * sizeof(double);
+    const size_t bufSize = (nPoints) * sizeof(double);
     previousStep = malloc(bufSize);
     currentStep = malloc(bufSize);
     nextStep = malloc(bufSize);
@@ -377,7 +377,7 @@ void simulateOneTimeStep(int holdflag)
 
     int i;
 
-    for (i = 1; i < nPoints; i++)
+    for (i = 1; i < nPoints - 1; i++)
     {
 
         if (holdflag == i)
@@ -393,7 +393,7 @@ void simulateOneTimeStep(int holdflag)
 
     // update boundary conditions
     nextStep[0] = 0.0;
-    nextStep[nPoints] = 0.0;
+    nextStep[nPoints - 1] = 0.0;
 
     // copy values one step "into the past"
     double *tempStep = previousStep;
@@ -438,11 +438,11 @@ void resetWave()
     double x;
     int i;
 
-    memset(previousStep, 0, nPoints + 1);
-    memset(currentStep, 0, nPoints + 1);
-    memset(nextStep, 0, nPoints + 1);
+    memset(previousStep, 0, nPoints);
+    memset(currentStep, 0, nPoints);
+    memset(nextStep, 0, nPoints);
 
-    for (i = 0; i < nPoints + 1; i++)
+    for (i = 0; i < nPoints; i++)
     {
 
         x = i * deltaX;
@@ -455,7 +455,7 @@ void outputNew()
 {
 
     printf("####Current Values:####\n");
-    for (int l = 0; l < nPoints + 1; ++l)
+    for (int l = 0; l < nPoints; ++l)
     {
         printf("%4d => %6.6f\n", l, currentStep[l]);
     }
@@ -463,11 +463,10 @@ void outputNew()
 
 void performBenchmark()
 {
-
     const unsigned short RERUNS = 10;
-    double runtime[RERUNS];
+    double runtime[RERUNS + 1];
 
-    memset(runtime, 0, RERUNS);
+    memset(runtime, 0, RERUNS + 1);
 
     double mean = 0.0;
     double stddev = 0.0;
@@ -475,28 +474,13 @@ void performBenchmark()
     initWaveConditions();
 
     // run repeatedly
-    for (int i = 0; i < RERUNS; i++)
+    for (int i = 0; i <= RERUNS; i++)
     {
         runtime[i] = simulateNumberOfTimeSteps();
         resetWave();
     }
 
     finalizeWave();
-
-    // calculate run time statistics
-    for (int i = 0; i < RERUNS; i++)
-    {
-        mean += runtime[i];
-    }
-    mean = mean / RERUNS;
-
-    for (int i = 0; i < RERUNS; i++)
-    {
-        stddev += pow(runtime[i] - mean, 2);
-    }
-    stddev = sqrt(stddev / RERUNS);
-
-    printf("%lf %lf\n", mean, stddev);
 
     FILE *fp;
     fp = fopen(BENCHMARK_FILE, "a");
@@ -507,7 +491,23 @@ void performBenchmark()
         exit(EXIT_FAILURE);
     }
 
-    fprintf(fp, "Running for %5d timesteps with %10d points took %5.5f seconds with stddev = %5.5f after %d reruns.\n", tPoints, nPoints, mean, stddev, RERUNS);
+    // calculate run time statistics
+    for (int i = 1; i <= RERUNS; i++)
+    {
+        fprintf(fp, "Run %2d: %10.8f seconds\n", i, runtime[i]);
+        mean += runtime[i];
+    }
+    mean = mean / RERUNS;
+
+    for (int i = 1; i <= RERUNS; i++)
+    {
+        stddev += pow(runtime[i] - mean, 2);
+    }
+    stddev = sqrt(stddev / RERUNS);
+
+    printf("Finished! Mean: %10.8f (Stddev:%10.8f)\n", mean, stddev);
+
+    fprintf(fp, "Running for %5d timesteps with %10d points took %10.8f seconds with stddev = %10.8f after %2d reruns.\n", tPoints, nPoints, mean, stddev, RERUNS);
     fclose(fp);
 }
 
@@ -531,7 +531,7 @@ double getLambda()
     return lambda;
 }
 
-int useGui()
+int showGui()
 {
     return useGui;
 }

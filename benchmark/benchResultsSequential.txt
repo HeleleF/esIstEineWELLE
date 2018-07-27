@@ -1,0 +1,11 @@
+Run  1: 0.43315336 seconds
+Run  2: 0.43199682 seconds
+Run  3: 0.43328033 seconds
+Run  4: 0.43390089 seconds
+Run  5: 0.43414977 seconds
+Run  6: 0.43279578 seconds
+Run  7: 0.43351333 seconds
+Run  8: 0.43427178 seconds
+Run  9: 0.43270084 seconds
+Run 10: 0.43404129 seconds
+Running for  1000 timesteps with     300000 points took 0.43338042 seconds with stddev = 0.00069938 after 10 reruns.

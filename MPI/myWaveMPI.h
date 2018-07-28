@@ -1,11 +1,11 @@
 /**
  * @file myWaveMPI.h
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
- * @brief header file for the main program in @file myWaveMPI.c
+ * @date 2018-07-29
+ * @brief header file for the main program in @c myWaveMPI.c
  * 
- * This file contains all needed definitions and includes
- * for the main mpi program implemented in @file myWaveMPI.c.
+ * @details This file contains all needed definitions and includes
+ * for the main mpi program implemented in @c myWaveMPI.c.
  */
 
 #ifndef __WAVE_MPI_H_
@@ -72,7 +72,6 @@
  * The icon path for the application
  */
 #define ICON_PATH "../psysIcon.png"
-
 
 /**
   * @brief Initializes all needed SDL variables

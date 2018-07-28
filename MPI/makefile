@@ -8,11 +8,11 @@ OPTIMIZE=-O3
 # Flags for all languages
 CPPFLAGS=-ggdb $(OPTIMIZE) -Wall -MMD -MP `pkg-config --cflags --libs sdl2`
 # Flags for C only
-CFLAGS=-Wmissing-prototypes -fopenmp
+CFLAGS=-Wmissing-prototypes
 # Flags for C++ only
 CXXFLAGS=-std=c++11
 # Flags for the linker
-LDFLAGS= -fopenmp
+LDFLAGS=
 # Additional linker libs
 LDLIBS=-lm -lSDL2 -lSDL2_image -lSDL2_ttf
 
@@ -54,7 +54,7 @@ endif
 
 # The first target (all) is always the default target
 .PHONY: all
-all: build
+all: clean build
 
 # Our build target depends on the real target
 .PHONY: build
@@ -64,14 +64,10 @@ build: $(TARGET)
 $(TARGET): $(OBJS)
 		$(CC) $(OBJS) -o $(TARGET) $(CFLAGS) $(CPPFLAGS) $(LDLIBS)
 
-# Our test target
-.PHONY: test
-test: $(TESTS)
-	$(foreach T,$(TESTS), ./$(T) &&) true
-
 # valgrind checker target
-.PHONY: check
-check: valgrind --tool=helgrind ./$(TARGET)
+.PHONY: test
+test: 
+	mpiexec valgrind ./$(TARGET) -u 0
 
 # Cleanup all generated files
 .PHONY: clean

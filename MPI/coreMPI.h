@@ -1,11 +1,11 @@
 /**
  * @file coreMPI.h
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
- * @brief header file for @file coreMPI.c
+ * @date 2018-07-29
+ * @brief header file for @c coreMPI.c
  * 
- * This file contains all needed definitions and includes
- * for the main mpi calculation logic implemented in @file coreMPI.c.
+ * @details This file contains all needed definitions and includes
+ * for the main mpi calculation logic implemented in @c coreMPI.c.
  */
 
 #ifndef __CORE_MPI_H_
@@ -15,10 +15,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <mpi.h>
+
 /**
  * @def _USE_MATH_DEFINES
  * 
- * Used for the constant @c M_PI from @verbinclude math.h.
+ * Used for the constant @c M_PI from @c math.h.
  */
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -49,7 +51,7 @@
  * 
  * The default output file used for benchmark results
  */
-#define BENCHMARK_FILE "../benchmark/benchResultsMPI.txt"
+#define BENCHMARK_FILE "../benchmark/benchResults.txt"
 
 
 /**

@@ -4,7 +4,7 @@
  * @date 2018-07-01
  * @brief Contains the main calculation logic for the wave
  * 
- * This file implements the main calculation logic for the wave.
+ * @details This file implements the main calculation logic for the wave.
  */
 
 #include <omp.h>
@@ -378,7 +378,7 @@ void simulateOneTimeStep(int holdflag)
 
     int i;
 
-#pragma omp parallel for shared(nextStep, currentStep, previousStep, cSquared, nPoints, holdflag) private(i)
+    #pragma omp parallel for shared(nextStep, currentStep, previousStep, cSquared, nPoints, holdflag) private(i)
     for (i = 1; i < nPoints - 1; i++)
     {
 

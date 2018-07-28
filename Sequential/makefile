@@ -54,7 +54,7 @@ endif
 
 # The first target (all) is always the default target
 .PHONY: all
-all: build
+all: clean build
 
 # Our build target depends on the real target
 .PHONY: build
@@ -63,10 +63,10 @@ build: $(TARGET)
 # Our target is built up from the objects
 $(TARGET): $(OBJS)
 
-# Our test target
+# valgrind checker target
 .PHONY: test
-test: $(TESTS)
-	$(foreach T,$(TESTS), ./$(T) &&) true
+test: 
+	valgrind ./$(TARGET) -u 0
 
 # Cleanup all generated files
 .PHONY: clean

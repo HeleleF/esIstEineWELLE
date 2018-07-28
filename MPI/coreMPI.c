@@ -1,14 +1,12 @@
 /**
  * @file coreMPI.c
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
+ * @date 2018-07-29
  * @brief Contains the main mpi calculation logic for the wave
  * 
- * This file implements the main mpi calculation logic for the wave.
+ * @details This file implements the main mpi calculation logic for the wave.
  */
 
-#include <omp.h>
-#include <mpi.h>
 #include "coreMPI.h"
 
 // time step arrays
@@ -434,6 +432,15 @@ void checkParams()
 void getUserInputOrConfig(int numberofargc, char **argv, int pid, int pnum)
 {
 
+    if (pnum < 2) {
+        if (pid == FIRST)
+        {
+            printf("[ERROR] At least 2 processes needed!\n");
+        }
+        MPI_Finalize();
+        exit(EXIT_FAILURE);
+    }
+
     // set id and number of processes once
     // so subsequent functions don't need to pass those values again
     id = pid;
@@ -507,7 +514,6 @@ void simulateOneTimeStep()
     int i;
 
     // calculate next time step with wave equation
-    #pragma omp parallel for shared(nextStep, currentStep, previousStep, cSquared, right, left) private(i)
     for (i = 1; i < right - left; i++)
     {
         nextStep[i] = 2.0 * currentStep[i] - previousStep[i] + cSquared * (currentStep[i - 1] - (2.0 * currentStep[i]) + currentStep[i + 1]);
@@ -554,7 +560,6 @@ double simulateNumberOfTimeSteps()
     {
         simulateOneTimeStep();
     }
-
     collectWave();
 
     elapsed = MPI_Wtime() - wtime;
@@ -692,7 +697,7 @@ void performBenchmark()
         if (NULL == fp)
         {
             printf("[ERROR] Could not get file '%s'!\n", BENCHMARK_FILE);
-            MPI_Abort();
+            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
             exit(EXIT_FAILURE);
         }
 

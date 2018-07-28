@@ -4,7 +4,7 @@
  * @date 2018-07-01
  * @brief Contains the main calculation logic for the wave
  * 
- * This file implements the main calculation logic for the wave.
+ * @details This file implements the main calculation logic for the wave.
  */
 
 #include "core.h"

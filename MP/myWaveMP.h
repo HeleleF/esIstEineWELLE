@@ -1,8 +1,11 @@
 /**
  * @file myWaveMP.h
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
- * @brief header file for the main program in @file myWaveMP.c
+ * @date 2018-07-29
+ * @brief header file for the main program in @c myWaveMP.c
+ *
+ * @details This file contains all needed definitions and includes
+ * for the main mp program implemented in @c myWaveMP.c.
  */
 
 #ifndef __WAVE_MP_H_

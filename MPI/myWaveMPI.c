@@ -4,7 +4,7 @@
  * @date 2018-07-01
  * @brief Contains the main MPI program
  * 
- * This file implements the main program and visualisation.
+ * @details This file implements the main program and visualisation.
  */
 
 #include "myWaveMPI.h"
@@ -20,7 +20,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     if (SDL_Init(SDL_INIT_EVERYTHING) == EXIT_FAILURE)
     {
         printf("SDL_Init Error: %s\n", SDL_GetError());
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     };
 
@@ -29,7 +29,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
     {
         printf("TTF_Init Error: %s\n", TTF_GetError());
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     };
 
@@ -39,7 +39,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
         printf("Initialising SDL_image failed. Error: \n%s\n", IMG_GetError());
         TTF_Quit();
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     }
 
@@ -51,7 +51,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
         IMG_Quit();
         TTF_Quit();
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     }
 
@@ -64,7 +64,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
         IMG_Quit();
         TTF_Quit();
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     }
 
@@ -78,7 +78,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
         IMG_Quit();
         TTF_Quit();
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     }
 
@@ -93,7 +93,7 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
         IMG_Quit();
         TTF_Quit();
         SDL_Quit();
-        MPI_Abort(MPI_COMM_WORLD);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         exit(EXIT_FAILURE);
     }
 
@@ -103,11 +103,11 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
 
 void closeSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon, SDL_Surface **surf, SDL_Texture **tex)
 {
-    SDL_FreeSurface(*textSurface);
-    SDL_DestroyTexture(*pauseTexture);
-    TTF_CloseFont(*font);
-    SDL_DestroyRenderer(*gRenderer);
-    SDL_DestroyWindow(*gWindow);
+    SDL_FreeSurface(*surf);
+    SDL_DestroyTexture(*tex);
+    TTF_CloseFont(*fon);
+    SDL_DestroyRenderer(*ren);
+    SDL_DestroyWindow(*win);
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
@@ -393,10 +393,10 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
+    initWaveConditions();
+
     if (showGui())
     {
-        initWaveConditions();
-
         if (id == MASTER)
         {
             printf("\n Controls:\n\tA\t\ttoggle axis\n");
@@ -409,8 +409,6 @@ int main(int argc, char **argv)
     else
     {
         double waveTime;
-
-        initWaveConditions();
         waveTime = simulateNumberOfTimeSteps();
 
         if (id == MASTER)

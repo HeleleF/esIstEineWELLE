@@ -1,8 +1,11 @@
 /**
  * @file myWave.h
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
- * @brief header file for the main program in @file myWave.c
+ * @date 2018-07-29
+ * @brief header file for the main program in @c myWave.c
+ *
+ * @details This file contains all needed definitions and includes
+ * for the main program implemented in @c myWave.c.
  */
 
 #ifndef __WAVE_H_

@@ -1,11 +1,11 @@
 /**
  * @file core.h
  * @author Chris Rebbelin s0548921
- * @date 2018-07-01
- * @brief header file for @file core.c
+ * @date 2018-07-29
+ * @brief header file for @c core.c
  * 
- * This file contains all needed definitions and includes
- * for the main calculation logic implemented in @file core.c.
+ * @details This file contains all needed definitions and includes
+ * for the main calculation logic implemented in @c core.c.
  */
 
 #ifndef __CORE_H_
@@ -19,7 +19,7 @@
 /**
  * @def _USE_MATH_DEFINES
  * 
- * Used for the constant M_PI from math.h.
+ * Used for the constant @c M_PI from @c math.h.
  */
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -50,14 +50,14 @@
  * 
  * The default output file used for benchmark results
  */
-#define BENCHMARK_FILE "../benchmark/benchResultsSequential.txt"
+#define BENCHMARK_FILE "../benchmark/benchResults.txt"
 
 
 /**
   * @brief Calculates the initial sine wave values 
   *
   * @param x The x value
-  * @return The value of the sine function at x
+  * @return The value of the sine function at @c x
   */
 double waveInitFunc(double x);
 

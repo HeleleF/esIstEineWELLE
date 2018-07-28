@@ -4,7 +4,7 @@
  * @date 2018-07-01
  * @brief Contains the main sequential program
  * 
- * This file implements the main sequential program and visualisation.
+ * @details This file implements the main sequential program and visualisation.
  */
 
 #include "myWave.h"
@@ -92,11 +92,11 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
 
 void closeSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon, SDL_Surface **surf, SDL_Texture **tex)
 {
-    SDL_FreeSurface(*textSurface);
-    SDL_DestroyTexture(*pauseTexture);
-    TTF_CloseFont(*font);
-    SDL_DestroyRenderer(*gRenderer);
-    SDL_DestroyWindow(*gWindow);
+    SDL_FreeSurface(*surf);
+    SDL_DestroyTexture(*tex);
+    TTF_CloseFont(*fon);
+    SDL_DestroyRenderer(*ren);
+    SDL_DestroyWindow(*win);
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();

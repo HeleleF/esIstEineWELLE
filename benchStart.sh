@@ -6,7 +6,7 @@
 # This script performs some benchmarks for the wave programs
 
 
-declare -a progTypes=("Sequential" "MP" "MPI")
+declare -a progTypes=("Sequential")
 declare -a numThreads=(2 3 4 5)
 declare -a numberOfPoints=(1000 10000 100000 1000000 10000000)
 
@@ -111,4 +111,5 @@ echo "==========================BENCHMARK ENDED ON $curTime=====================
 echo "============================================================================================" >> benchmark/benchResults.txt
 
 echo "All finished! Results saved to benchmark/benchResults.txt"
+sudo cpufreq-set -g powersave
 exit 0

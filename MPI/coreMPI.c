@@ -667,9 +667,9 @@ void performBenchmark()
 
     const unsigned short RERUNS = 10;
 
-    double runtime[RERUNS + 1];
+    double runtime[RERUNS];
 
-    memset(runtime, 0, RERUNS + 1);
+    memset(runtime, 0, RERUNS);
 
     double mean = 0.0;
     double stddev = 0.0;
@@ -677,7 +677,7 @@ void performBenchmark()
     initWaveConditions();
 
     // run repeatedly
-    for (int i = 0; i <= RERUNS; i++)
+    for (int i = 0; i < RERUNS; i++)
     {
         double etime = simulateNumberOfTimeSteps();
 
@@ -702,14 +702,14 @@ void performBenchmark()
         }
 
         // calculate run time statistics
-        for (int i = 1; i <= RERUNS; i++)
+        for (int i = 0; i < RERUNS; i++)
         {
             fprintf(fp, "Run %2d: %10.8f seconds\n", i, runtime[i]);
             mean += runtime[i];
         }
         mean = mean / RERUNS;
 
-        for (int i = 1; i <= RERUNS; i++)
+        for (int i = 0; i < RERUNS; i++)
         {
             stddev += pow(runtime[i] - mean, 2);
         }

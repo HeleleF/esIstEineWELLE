@@ -12,6 +12,8 @@
 // time step arrays
 double *previousStep, *currentStep, *nextStep;
 
+size_t bufSize;
+
 // setting values
 int intervalEnd, nPoints, tPoints, periods, amplitude, useGui, printvalues, doBenchmark;
 
@@ -364,7 +366,7 @@ void initWaveConditions()
 {
 
     // initialize arrays
-    const size_t bufSize = (nPoints) * sizeof(double);
+    bufSize = (nPoints) * sizeof(double);
     previousStep = malloc(bufSize);
     currentStep = malloc(bufSize);
     nextStep = malloc(bufSize);
@@ -405,23 +407,23 @@ void simulateOneTimeStep(int holdflag)
 double simulateNumberOfTimeSteps()
 {
 
-    struct timespec start, end;
+    struct timeval start, end;
 
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    gettimeofday(&start, NULL);
 
     for (int i = 1; i < tPoints; ++i)
     {
         simulateOneTimeStep(0);
     }
 
-    clock_gettime(CLOCK_MONOTONIC, &end);
+    gettimeofday(&end, NULL);
 
     if (printvalues)
     {
         outputNew();
     }
 
-    return ((end.tv_nsec - start.tv_nsec) / 1E9 + (end.tv_sec - start.tv_sec));
+    return ((end.tv_usec - start.tv_usec) / 1E6 + (end.tv_sec - start.tv_sec));
 }
 
 void finalizeWave()
@@ -457,28 +459,27 @@ void outputNew()
     printf("####Current Values:####\n");
     for (int l = 0; l < nPoints; ++l)
     {
-        printf("%4d => %6.6f\n", l, currentStep[l]);
+        printf("%4d => %9.6f\n", l, currentStep[l]);
     }
 }
 
 void performBenchmark()
 {
     const unsigned short RERUNS = 10;
-    double runtime[RERUNS + 1];
+    double runtime[RERUNS];
 
-    memset(runtime, 0, RERUNS + 1);
+    memset(runtime, 0, RERUNS);
 
     double mean = 0.0;
     double stddev = 0.0;
-
+    
     initWaveConditions();
 
     // run repeatedly
-    for (int i = 0; i <= RERUNS; i++)
+    for (int i = 0; i < RERUNS; i++)
     {
         runtime[i] = simulateNumberOfTimeSteps();
-        resetWave();
-    }
+    } 
 
     finalizeWave();
 
@@ -492,14 +493,14 @@ void performBenchmark()
     }
 
     // calculate run time statistics
-    for (int i = 1; i <= RERUNS; i++)
+    for (int i = 0; i < RERUNS; i++)
     {
         fprintf(fp, "Run %2d: %10.8f seconds\n", i, runtime[i]);
         mean += runtime[i];
     }
     mean = mean / RERUNS;
 
-    for (int i = 1; i <= RERUNS; i++)
+    for (int i = 0; i < RERUNS; i++)
     {
         stddev += pow(runtime[i] - mean, 2);
     }
@@ -507,7 +508,7 @@ void performBenchmark()
 
     printf("Finished! Mean: %10.8f (Stddev:%10.8f)\n", mean, stddev);
 
-    fprintf(fp, "Running for %5d timesteps with %10d points took %10.8f seconds with stddev = %10.8f after %2d reruns.\n", tPoints, nPoints, mean, stddev, RERUNS);
+    fprintf(fp, "Running for %3d timesteps with %8d points took %10.8f seconds with stddev = %10.8f after %2d reruns.\n", tPoints, nPoints, mean, stddev, RERUNS);
     fclose(fp);
 }
 

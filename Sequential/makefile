@@ -8,11 +8,11 @@ OPTIMIZE=-O3
 # Flags for all languages
 CPPFLAGS=-ggdb $(OPTIMIZE) -Wall -MMD -MP `pkg-config --cflags --libs sdl2`
 # Flags for C only
-CFLAGS=-Wmissing-prototypes
+CFLAGS=-Wmissing-prototypes -fopenmp
 # Flags for C++ only
 CXXFLAGS=-std=c++11
 # Flags for the linker
-LDFLAGS=
+LDFLAGS=-fopenmp
 # Additional linker libs
 LDLIBS=-lm -lSDL2 -lSDL2_image -lSDL2_ttf
 

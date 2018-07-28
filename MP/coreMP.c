@@ -409,14 +409,14 @@ double simulateNumberOfTimeSteps()
 
     struct timespec start, end;
 
-    clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     for (int i = 1; i < tPoints; ++i)
     {
         simulateOneTimeStep(0);
     }
 
-    clock_gettime(CLOCK_REALTIME, &end);
+    clock_gettime(CLOCK_MONOTONIC, &end);
 
     if (printvalues)
     {

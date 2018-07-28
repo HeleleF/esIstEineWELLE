@@ -56,9 +56,9 @@
  * 
  * If the left mouse-button is clicked, its coordinates are checked:
  * First it is checked if the x-Coordinate is actually on the x-Axis.
- * Then the y-Coordinate of the wave at that x is taken. If the absolute
- * difference of this y and the mouse-y is less than HOLD_TOLERANCE, the
- * Point at x is marked as "hold". 
+ * Then the y-Coordinate of the wave at that @c x is taken. If the absolute
+ * difference of this @c y and the mouse-y is less than @c HOLD_TOLERANCE, the
+ * Point at @c x is marked as "hold". 
  * This was implemented because it is not possible to accurately click on
  * the exact wave line pixel.
  */
@@ -86,11 +86,6 @@
 #define ICON_PATH "../psysIcon.png"
 
 /**
-  * @brief Visualizes the wave equation with the SDL library
-  */
-void doGraphics(void);
-
-/**
   * @brief Initializes the main SDL variables
   *
   * @param win pointer to the SDL_Window
@@ -98,5 +93,21 @@ void doGraphics(void);
   * @param fon pointer to the TTF_Font
   */
 void initSdlVars(SDL_Window** win, SDL_Renderer** ren, TTF_Font** fon);
+
+/**
+  * @brief Frees all SDL variables
+  *
+  * @param win pointer to the SDL_Window
+  * @param ren pointer to the SDL_Renderer
+  * @param fon pointer to the TTF_Font
+  * @param surf pointer to the SDL_Surface
+  * @param tex pointer to the SDL_Texture
+  */
+void closeSdlVars(SDL_Window** win, SDL_Renderer** ren, TTF_Font** fon, SDL_Surface **surf, SDL_Texture **tex);
+
+/**
+  * @brief Visualizes the wave equation with the SDL library
+  */
+void doGraphics(void);
 
 #endif //__WAVE_MP_H_

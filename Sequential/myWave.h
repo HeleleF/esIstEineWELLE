@@ -86,11 +86,6 @@
 #define ICON_PATH "../psysIcon.png"
 
 /**
-  * @brief Visualizes the wave equation with the SDL library
-  */
-void doGraphics(void);
-
-/**
   * @brief Initializes the main SDL variables
   *
   * @param win pointer to the SDL_Window
@@ -98,5 +93,21 @@ void doGraphics(void);
   * @param fon pointer to the TTF_Font
   */
 void initSdlVars(SDL_Window** win, SDL_Renderer** ren, TTF_Font** fon);
+
+/**
+  * @brief Frees all SDL variables
+  *
+  * @param win pointer to the SDL_Window
+  * @param ren pointer to the SDL_Renderer
+  * @param fon pointer to the TTF_Font
+  * @param surf pointer to the SDL_Surface
+  * @param tex pointer to the SDL_Texture
+  */
+void closeSdlVars(SDL_Window** win, SDL_Renderer** ren, TTF_Font** fon, SDL_Surface **surf, SDL_Texture **tex);
+
+/**
+  * @brief Visualizes the wave equation with the SDL library
+  */
+void doGraphics(void);
 
 #endif //__WAVE_H_

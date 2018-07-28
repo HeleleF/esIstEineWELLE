@@ -1,4 +1,4 @@
-# makefile
+# makefile for sequential program
 
 # The name of the main executable
 TARGET=myWave
@@ -67,10 +67,6 @@ $(TARGET): $(OBJS)
 .PHONY: test
 test: $(TESTS)
 	$(foreach T,$(TESTS), ./$(T) &&) true
-
-# valgrind checker target
-.PHONY: check
-check: valgrind --tool=helgrind ./$(TARGET)
 
 # Cleanup all generated files
 .PHONY: clean

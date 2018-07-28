@@ -2,9 +2,9 @@
  * @file myWave.c
  * @author Chris Rebbelin s0548921
  * @date 2018-07-01
- * @brief This file contains the main program
+ * @brief Contains the main sequential program
  * 
- * This file implements the main program and visualisation.
+ * This file implements the main sequential program and visualisation.
  */
 
 #include "myWave.h"
@@ -88,6 +88,18 @@ void initSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon)
 
     // set window icon
     SDL_SetWindowIcon(*win, icon);
+}
+
+void closeSdlVars(SDL_Window **win, SDL_Renderer **ren, TTF_Font **fon, SDL_Surface **surf, SDL_Texture **tex)
+{
+    SDL_FreeSurface(*textSurface);
+    SDL_DestroyTexture(*pauseTexture);
+    TTF_CloseFont(*font);
+    SDL_DestroyRenderer(*gRenderer);
+    SDL_DestroyWindow(*gWindow);
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }
 
 void doGraphics()
@@ -298,7 +310,7 @@ void doGraphics()
         currentSimulationStep = getStep();
 
         // apply damping
-        z = exp((double) -currentTimeStep * lambda);
+        z = exp((double)-currentTimeStep * lambda);
 
         for (int l = 1; l < npoints; ++l)
         {
@@ -338,14 +350,7 @@ void doGraphics()
     }
 
     // quit the program
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(pauseTexture);
-    TTF_CloseFont(font);
-    SDL_DestroyRenderer(gRenderer);
-    SDL_DestroyWindow(gWindow);
-    IMG_Quit();
-    TTF_Quit();
-    SDL_Quit();
+    closeSdlVars(&gWindow, &gRenderer, &font, &textSurface, &pauseTexture);
 }
 
 int main(int argc, char **argv)

@@ -1,4 +1,4 @@
-# makefile
+# makefile for mp program
 
 # The name of the main executable
 TARGET=myWaveMP

@@ -18,7 +18,7 @@
 /**
  * @def _USE_MATH_DEFINES
  * 
- * Used for the constant M_PI from math.h.
+ * Used for the constant @c M_PI from @verbinclude math.h.
  */
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -98,7 +98,7 @@ void getUserInputOrConfig(int numberofargc, char** argv, int pid, int pnum);
   * @brief Calculates the initial sine wave values 
   *
   * @param x The x value
-  * @return The value of the sine function at x
+  * @return The value of the sine function at @c x
   */
 double waveInitFunc(double x);
 
@@ -113,7 +113,7 @@ void initWaveConditions(void);
 void simulateOneTimeStep(void);
 
 /**
-  * @brief Calls simulateOneTimeStep() a specified number of times
+  * @brief Calls @c simulateOneTimeStep() a specified number of times
   */
 double simulateNumberOfTimeSteps(void);
 
@@ -128,7 +128,7 @@ void collectWave(void);
 void finalizeWave(void);
 
 /**
-  * @brief Resets the time step arrays to the
+  * @brief Resets the time step arrays
   */
 void resetWave(void);
 

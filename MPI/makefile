@@ -1,4 +1,4 @@
-# makefile
+# makefile for mpi program
 
 # The name of the main executable
 TARGET=myWaveMPI

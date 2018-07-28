@@ -8,7 +8,7 @@
  */
 
 #include <omp.h>
-#include "mpi.h"
+#include <mpi.h>
 #include "coreMPI.h"
 
 // time step arrays
@@ -80,7 +80,6 @@ void outputHelpMessage()
 
 void getFromSettingsFile(char *configPath)
 {
-
     const unsigned short MAXLINE = 200;
     const unsigned short MAXSETTING = 50;
 
@@ -424,7 +423,10 @@ void checkParams()
         printf("Simulating a %sdampened", lambda == 0 ? "un" : "");
         printf(" sine wave with amplitude %d and %d periods", amplitude, periods);
         if (lambda != 0)
+        {
             printf(" and damping factor %f", lambda);
+        }
+
         printf("\n");
     }
 }
@@ -453,12 +455,10 @@ void getUserInputOrConfig(int numberofargc, char **argv, int pid, int pnum)
 
     if (numberofargc > 1)
     {
-
         getFromCmdLine(numberofargc, argv);
     }
     else
     {
-
         // no cmd args, use default settings file
         getFromSettingsFile(DEFAULT_SETTINGS_FILE_PATH);
     }
@@ -469,12 +469,13 @@ void getUserInputOrConfig(int numberofargc, char **argv, int pid, int pnum)
 
 double waveInitFunc(double x)
 {
+    // divide by (intervalEnd - 1) to satisfy the right border condition
+    // necessary because 1000 points means indices 0 to 999
     return (amplitude * sin(2 * x * M_PI * periods / (intervalEnd - 1)));
 }
 
 void initWaveConditions()
 {
-
     // calculate left and right border for every process
     left = (id * (nPointsGlobal - 1)) / numberOfProcesses;
     right = ((id + 1) * (nPointsGlobal - 1)) / numberOfProcesses;
@@ -532,7 +533,7 @@ void simulateOneTimeStep()
     }
     else
     {
-        // last process is the "rightmost" and has no right neighbor but the boundary condition
+        // LAST is the "rightmost" and has no right neighbor but the boundary condition
         nextStep[right - left] = 0.0;
     }
 
@@ -589,7 +590,7 @@ void collectWave()
             CHECK(MPI_Recv(buffer, 2, MPI_INT, i, INFO, MPI_COMM_WORLD, &status));
 
             startIdx = buffer[0]; // start index in global array
-            cnt = buffer[1];  // how many points to expect
+            cnt = buffer[1];      // how many points to expect
 
             // recieve <count> values and write them into the global array, starting at index <left>
             CHECK(MPI_Recv(&globalStep[startIdx], cnt, MPI_DOUBLE, i, ACTUAL, MPI_COMM_WORLD, &status));
@@ -640,7 +641,6 @@ void resetWave()
     // initialize the first time step
     for (int k = 0; k < nPointsLocal; k++)
     {
-
         double x = (k + left) * deltaX;
         previousStep[k] = waveInitFunc(x);
         currentStep[k] = waveInitFunc(x);
@@ -674,7 +674,6 @@ void performBenchmark()
     // run repeatedly
     for (int i = 0; i <= RERUNS; i++)
     {
-
         double etime = simulateNumberOfTimeSteps();
 
         if (id == FIRST)
@@ -693,7 +692,7 @@ void performBenchmark()
         if (NULL == fp)
         {
             printf("[ERROR] Could not get file '%s'!\n", BENCHMARK_FILE);
-            MPI_Finalize();
+            MPI_Abort();
             exit(EXIT_FAILURE);
         }
 

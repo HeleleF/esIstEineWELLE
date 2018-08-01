@@ -6,15 +6,22 @@
 # This script performs some benchmarks for the wave programs
 
 
-declare -a progTypes=("Sequential")
-declare -a numThreads=(2 3 4 5)
-declare -a numberOfPoints=(1000 10000 100000 1000000 10000000)
-
-timeSteps=1000
+# all program types that will be benched
+declare -a progTypes=("Sequential MP MPI")
 
 progSeq="./myWave"
 progMP="./myWaveMP"
 progMPI="myWaveMPI"
+
+# different thread numbers for testing OpenMP and MPI
+declare -a numThreads=(2 3 4 5)
+
+# different point sizes
+declare -a numberOfPoints=(1000 10000 100000 1000000 10000000)
+
+# how many time steps, more than 1000 takes too long to measure
+timeSteps=1000
+
 
 # calls the actual wave program with -b flag for benchmark
 function doStuff {
@@ -22,7 +29,7 @@ function doStuff {
         if [ "$1" = "Sequential" ]
         then
             prog=$progSeq
-            { "$prog" -b "$2" "$3"; } 2>&1 
+            { "$prog" -b "$2" "$3"; } 2>&1 # print error messages to normal output
 
         elif [ "$1" = "MP" ] 
         then
@@ -50,7 +57,7 @@ echo "========================BENCHMARK PERFORMED ON $curTime===================
 echo "============================================================================================" >> benchmark/benchResults.txt
 echo "" >> benchmark/benchResults.txt
 
-## now loop through the above array
+## now loop through the programs array
 for progType in "${progTypes[@]}"
 do
 	cd $progType
@@ -73,6 +80,7 @@ do
     	echo "Type: $progType" >> ../benchmark/benchResults.txt
     	echo "============================================================================================" >> ../benchmark/benchResults.txt
 
+		# try with all point sizes
     	for points in "${numberOfPoints[@]}"
     	do
         	doStuff $progType $timeSteps $points
@@ -80,7 +88,7 @@ do
 
     else
 
-    	# for MP and MPI, test different number of threads
+    	# for MP and MPI, test different number of threads as well
     	for threads in "${numThreads[@]}"
     	do
 
@@ -111,5 +119,5 @@ echo "==========================BENCHMARK ENDED ON $curTime=====================
 echo "============================================================================================" >> benchmark/benchResults.txt
 
 echo "All finished! Results saved to benchmark/benchResults.txt"
-sudo cpufreq-set -g powersave
+sudo cpufreq-set -g powersave # revert the cpu setting to the old one
 exit 0

@@ -1,5 +1,5 @@
 ============================================================================================
-========================BENCHMARK PERFORMED ON 2018-07-28 23:18:16==========================
+========================BENCHMARK PERFORMED ON 2018-07-28 21:07:06==========================
 ============================================================================================
 
 ============================================================================================
@@ -60,7 +60,467 @@ Run  7: 68.19683600 seconds
 Run  8: 68.19487200 seconds
 Run  9: 68.20082700 seconds
 Running for 1000 timesteps with 10000000 points took 68.21331000 seconds with stddev = 0.02971064 after 10 reruns.
-
 ============================================================================================
-==========================BENCHMARK ENDED ON 2018-07-28 23:30:58============================
+Type: MP using 2 threads
 ============================================================================================
+Run  1: 0.00446724 seconds
+Run  2: 0.00406042 seconds
+Run  3: 0.00415716 seconds
+Run  4: 0.00403690 seconds
+Run  5: 0.00403002 seconds
+Run  6: 0.00414061 seconds
+Run  7: 0.00404962 seconds
+Run  8: 0.00404041 seconds
+Run  9: 0.00404196 seconds
+Run 10: 0.00404027 seconds
+Running for  1000 timesteps with       1000 points took 0.00410646 seconds with stddev = 0.00012761 after 10 reruns.
+Run  1: 0.03465038 seconds
+Run  2: 0.03465166 seconds
+Run  3: 0.03456971 seconds
+Run  4: 0.03476751 seconds
+Run  5: 0.03461917 seconds
+Run  6: 0.03480712 seconds
+Run  7: 0.03456128 seconds
+Run  8: 0.03463106 seconds
+Run  9: 0.03468631 seconds
+Run 10: 0.03456079 seconds
+Running for  1000 timesteps with      10000 points took 0.03465050 seconds with stddev = 0.00007962 after 10 reruns.
+Run  1: 0.34243538 seconds
+Run  2: 0.34242950 seconds
+Run  3: 0.34247591 seconds
+Run  4: 0.34241405 seconds
+Run  5: 0.34250271 seconds
+Run  6: 0.34247117 seconds
+Run  7: 0.34248869 seconds
+Run  8: 0.34243083 seconds
+Run  9: 0.34237533 seconds
+Run 10: 0.34253508 seconds
+Running for  1000 timesteps with     100000 points took 0.34245587 seconds with stddev = 0.00004490 after 10 reruns.
+Run  1: 3.41823294 seconds
+Run  2: 3.41772645 seconds
+Run  3: 3.41771893 seconds
+Run  4: 3.41846946 seconds
+Run  5: 3.41930722 seconds
+Run  6: 3.41835252 seconds
+Run  7: 3.41872188 seconds
+Run  8: 3.41900659 seconds
+Run  9: 3.41848670 seconds
+Run 10: 3.41844986 seconds
+Running for  1000 timesteps with    1000000 points took 3.41844725 seconds with stddev = 0.00047274 after 10 reruns.
+Run  1: 34.22149748 seconds
+Run  2: 34.20737315 seconds
+Run  3: 34.21335670 seconds
+Run  4: 34.20835608 seconds
+Run  5: 34.20957975 seconds
+Run  6: 34.20682181 seconds
+Run  7: 34.22087360 seconds
+Run  8: 34.20787069 seconds
+Run  9: 34.23012558 seconds
+Run 10: 34.21086271 seconds
+Running for  1000 timesteps with   10000000 points took 34.21367176 seconds with stddev = 0.00746374 after 10 reruns.
+============================================================================================
+Type: MP using 3 threads
+============================================================================================
+Run  1: 0.00300438 seconds
+Run  2: 0.00299821 seconds
+Run  3: 0.00302353 seconds
+Run  4: 0.00300363 seconds
+Run  5: 0.00300260 seconds
+Run  6: 0.00298756 seconds
+Run  7: 0.00301057 seconds
+Run  8: 0.00310049 seconds
+Run  9: 0.00308828 seconds
+Run 10: 0.00297311 seconds
+Running for  1000 timesteps with       1000 points took 0.00301924 seconds with stddev = 0.00003972 after 10 reruns.
+Run  1: 0.02360908 seconds
+Run  2: 0.02340508 seconds
+Run  3: 0.02342469 seconds
+Run  4: 0.02352222 seconds
+Run  5: 0.02351128 seconds
+Run  6: 0.02340703 seconds
+Run  7: 0.02365369 seconds
+Run  8: 0.02339739 seconds
+Run  9: 0.02341010 seconds
+Run 10: 0.02339400 seconds
+Running for  1000 timesteps with      10000 points took 0.02347346 seconds with stddev = 0.00009070 after 10 reruns.
+Run  1: 0.23021730 seconds
+Run  2: 0.23012516 seconds
+Run  3: 0.23034378 seconds
+Run  4: 0.23012480 seconds
+Run  5: 0.22978912 seconds
+Run  6: 0.23027445 seconds
+Run  7: 0.23055279 seconds
+Run  8: 0.23121665 seconds
+Run  9: 0.23069376 seconds
+Run 10: 0.23212341 seconds
+Running for  1000 timesteps with     100000 points took 0.23054612 seconds with stddev = 0.00064109 after 10 reruns.
+Run  1: 2.31636319 seconds
+Run  2: 2.31559975 seconds
+Run  3: 2.32144499 seconds
+Run  4: 2.33028099 seconds
+Run  5: 2.31798920 seconds
+Run  6: 2.31567359 seconds
+Run  7: 2.31554690 seconds
+Run  8: 2.31611657 seconds
+Run  9: 2.31579199 seconds
+Run 10: 2.31599865 seconds
+Running for  1000 timesteps with    1000000 points took 2.31808058 seconds with stddev = 0.00441502 after 10 reruns.
+Run  1: 22.90945278 seconds
+Run  2: 22.91171149 seconds
+Run  3: 22.92165005 seconds
+Run  4: 22.96623949 seconds
+Run  5: 22.95435455 seconds
+Run  6: 22.94383227 seconds
+Run  7: 22.95465516 seconds
+Run  8: 22.94260015 seconds
+Run  9: 22.97838797 seconds
+Run 10: 22.94473936 seconds
+Running for  1000 timesteps with   10000000 points took 22.94276233 seconds with stddev = 0.02149575 after 10 reruns.
+============================================================================================
+Type: MP using 4 threads
+============================================================================================
+Run  1: 0.00254637 seconds
+Run  2: 0.00265599 seconds
+Run  3: 0.00353295 seconds
+Run  4: 0.00248131 seconds
+Run  5: 0.00250515 seconds
+Run  6: 0.00242405 seconds
+Run  7: 0.00245251 seconds
+Run  8: 0.00248480 seconds
+Run  9: 0.00365865 seconds
+Run 10: 0.00256945 seconds
+Running for  1000 timesteps with       1000 points took 0.00273112 seconds with stddev = 0.00043763 after 10 reruns.
+Run  1: 0.02029060 seconds
+Run  2: 0.01810780 seconds
+Run  3: 0.01773643 seconds
+Run  4: 0.01774193 seconds
+Run  5: 0.01774358 seconds
+Run  6: 0.01774095 seconds
+Run  7: 0.01780511 seconds
+Run  8: 0.01772826 seconds
+Run  9: 0.01881081 seconds
+Run 10: 0.01786790 seconds
+Running for  1000 timesteps with      10000 points took 0.01815734 seconds with stddev = 0.00077888 after 10 reruns.
+Run  1: 0.17357210 seconds
+Run  2: 0.17371755 seconds
+Run  3: 0.17527596 seconds
+Run  4: 0.17399100 seconds
+Run  5: 0.17371323 seconds
+Run  6: 0.17500169 seconds
+Run  7: 0.17363313 seconds
+Run  8: 0.17361337 seconds
+Run  9: 0.17412358 seconds
+Run 10: 0.17481718 seconds
+Running for  1000 timesteps with     100000 points took 0.17414588 seconds with stddev = 0.00061082 after 10 reruns.
+Run  1: 1.76782431 seconds
+Run  2: 1.76811878 seconds
+Run  3: 1.76755176 seconds
+Run  4: 1.79278331 seconds
+Run  5: 1.81847490 seconds
+Run  6: 1.81916123 seconds
+Run  7: 1.81906665 seconds
+Run  8: 1.81996243 seconds
+Run  9: 1.81874467 seconds
+Run 10: 1.81915227 seconds
+Running for  1000 timesteps with    1000000 points took 1.80108403 seconds with stddev = 0.02309456 after 10 reruns.
+Run  1: 18.24054030 seconds
+Run  2: 18.29948599 seconds
+Run  3: 18.34079496 seconds
+Run  4: 18.24041497 seconds
+Run  5: 18.22322836 seconds
+Run  6: 18.26101714 seconds
+Run  7: 18.20847029 seconds
+Run  8: 18.21954186 seconds
+Run  9: 18.27997429 seconds
+Run 10: 18.33495795 seconds
+Running for  1000 timesteps with   10000000 points took 18.26484261 seconds with stddev = 0.04503081 after 10 reruns.
+============================================================================================
+Type: MP using 5 threads
+============================================================================================
+Run  1: 0.02307654 seconds
+Run  2: 0.02308938 seconds
+Run  3: 0.02307175 seconds
+Run  4: 0.02304421 seconds
+Run  5: 0.02300923 seconds
+Run  6: 0.02302616 seconds
+Run  7: 0.02297609 seconds
+Run  8: 0.02362456 seconds
+Run  9: 0.02317430 seconds
+Run 10: 0.02304099 seconds
+Running for  1000 timesteps with       1000 points took 0.02311332 seconds with stddev = 0.00017777 after 10 reruns.
+Run  1: 0.04624891 seconds
+Run  2: 0.04472552 seconds
+Run  3: 0.04424952 seconds
+Run  4: 0.04422743 seconds
+Run  5: 0.04391423 seconds
+Run  6: 0.04406366 seconds
+Run  7: 0.04467755 seconds
+Run  8: 0.04435445 seconds
+Run  9: 0.04422263 seconds
+Run 10: 0.04394151 seconds
+Running for  1000 timesteps with      10000 points took 0.04446254 seconds with stddev = 0.00064866 after 10 reruns.
+Run  1: 0.26789134 seconds
+Run  2: 0.26695685 seconds
+Run  3: 0.27391384 seconds
+Run  4: 0.26642557 seconds
+Run  5: 0.26933680 seconds
+Run  6: 0.26274281 seconds
+Run  7: 0.26992233 seconds
+Run  8: 0.26984884 seconds
+Run  9: 0.27398076 seconds
+Run 10: 0.26249186 seconds
+Running for  1000 timesteps with     100000 points took 0.26835110 seconds with stddev = 0.00374122 after 10 reruns.
+Run  1: 2.30256577 seconds
+Run  2: 2.29611112 seconds
+Run  3: 2.29626595 seconds
+Run  4: 2.29925228 seconds
+Run  5: 2.29336244 seconds
+Run  6: 2.29142825 seconds
+Run  7: 2.29073364 seconds
+Run  8: 2.28554207 seconds
+Run  9: 2.29635734 seconds
+Run 10: 2.29201896 seconds
+Running for  1000 timesteps with    1000000 points took 2.29436378 seconds with stddev = 0.00455999 after 10 reruns.
+Run  1: 21.50076675 seconds
+Run  2: 21.51668142 seconds
+Run  3: 21.54952806 seconds
+Run  4: 21.52448041 seconds
+Run  5: 21.50185853 seconds
+Run  6: 21.49826094 seconds
+Run  7: 21.49700437 seconds
+Run  8: 21.52691253 seconds
+Run  9: 21.49140933 seconds
+Run 10: 21.55646221 seconds
+Running for  1000 timesteps with   10000000 points took 21.51633645 seconds with stddev = 0.02159606 after 10 reruns.
+============================================================================================
+Type: MPI using 2 threads
+============================================================================================
+Run  1: 0.00052595 seconds
+Run  2: 0.00052595 seconds
+Run  3: 0.00052691 seconds
+Run  4: 0.00052595 seconds
+Run  5: 0.00052595 seconds
+Run  6: 0.00052595 seconds
+Run  7: 0.00057197 seconds
+Run  8: 0.00052691 seconds
+Run  9: 0.00052595 seconds
+Run 10: 0.00052691 seconds
+Running for  1000 timesteps with       1000 points took 0.00053084 seconds with stddev = 0.00001372 after 10 reruns.
+Run  1: 0.00319791 seconds
+Run  2: 0.00316000 seconds
+Run  3: 0.00429988 seconds
+Run  4: 0.00323486 seconds
+Run  5: 0.00313497 seconds
+Run  6: 0.00757289 seconds
+Run  7: 0.00556493 seconds
+Run  8: 0.00477004 seconds
+Run  9: 0.00339794 seconds
+Run 10: 0.00319195 seconds
+Running for  1000 timesteps with      10000 points took 0.00415254 seconds with stddev = 0.00139150 after 10 reruns.
+Run  1: 0.03335190 seconds
+Run  2: 0.07080293 seconds
+Run  3: 0.03328300 seconds
+Run  4: 0.03315687 seconds
+Run  5: 0.03336906 seconds
+Run  6: 0.03319287 seconds
+Run  7: 0.03360081 seconds
+Run  8: 0.03313088 seconds
+Run  9: 0.03307509 seconds
+Run 10: 0.03328395 seconds
+Running for  1000 timesteps with     100000 points took 0.03702474 seconds with stddev = 0.01126030 after 10 reruns.
+Run  1: 1.24326301 seconds
+Run  2: 1.24311614 seconds
+Run  3: 1.24666190 seconds
+Run  4: 1.24265790 seconds
+Run  5: 1.24047995 seconds
+Run  6: 1.24052095 seconds
+Run  7: 1.24045587 seconds
+Run  8: 1.24399209 seconds
+Run  9: 1.24111605 seconds
+Run 10: 1.24091792 seconds
+Running for  1000 timesteps with    1000000 points took 1.24231818 seconds with stddev = 0.00191828 after 10 reruns.
+Run  1: 13.20643902 seconds
+Run  2: 13.20870209 seconds
+Run  3: 13.20598006 seconds
+Run  4: 13.27898407 seconds
+Run  5: 13.20032692 seconds
+Run  6: 13.21610498 seconds
+Run  7: 13.21717811 seconds
+Run  8: 13.20207405 seconds
+Run  9: 13.22922397 seconds
+Run 10: 13.20164680 seconds
+Running for  1000 timesteps with   10000000 points took 13.21666601 seconds with stddev = 0.02242653 after 10 reruns.
+============================================================================================
+Type: MPI using 3 threads
+============================================================================================
+Run  1: 0.00099993 seconds
+Run  2: 0.00100088 seconds
+Run  3: 0.00104284 seconds
+Run  4: 0.00099897 seconds
+Run  5: 0.00099707 seconds
+Run  6: 0.00099611 seconds
+Run  7: 0.00106215 seconds
+Run  8: 0.00100303 seconds
+Run  9: 0.00105214 seconds
+Run 10: 0.00107694 seconds
+Running for  1000 timesteps with       1000 points took 0.00102301 seconds with stddev = 0.00003013 after 10 reruns.
+Run  1: 0.00454307 seconds
+Run  2: 0.00478196 seconds
+Run  3: 0.00456882 seconds
+Run  4: 0.00451803 seconds
+Run  5: 0.00455308 seconds
+Run  6: 0.00863099 seconds
+Run  7: 0.00453520 seconds
+Run  8: 0.00456905 seconds
+Run  9: 0.00449395 seconds
+Run 10: 0.00458789 seconds
+Running for  1000 timesteps with      10000 points took 0.00497820 seconds with stddev = 0.00121989 after 10 reruns.
+Run  1: 0.04375410 seconds
+Run  2: 0.04376507 seconds
+Run  3: 0.04377699 seconds
+Run  4: 0.04373288 seconds
+Run  5: 0.04373407 seconds
+Run  6: 0.04371214 seconds
+Run  7: 0.04382801 seconds
+Run  8: 0.04366589 seconds
+Run  9: 0.04366922 seconds
+Run 10: 0.04369807 seconds
+Running for  1000 timesteps with     100000 points took 0.04373364 seconds with stddev = 0.00004760 after 10 reruns.
+Run  1: 1.35122514 seconds
+Run  2: 1.30138588 seconds
+Run  3: 1.30626082 seconds
+Run  4: 1.30265212 seconds
+Run  5: 1.30161214 seconds
+Run  6: 1.30304503 seconds
+Run  7: 1.30029893 seconds
+Run  8: 1.29972506 seconds
+Run  9: 1.29901195 seconds
+Run 10: 1.29903698 seconds
+Running for  1000 timesteps with    1000000 points took 1.30642540 seconds with stddev = 0.01507730 after 10 reruns.
+Run  1: 13.50370789 seconds
+Run  2: 13.50331903 seconds
+Run  3: 13.54480004 seconds
+Run  4: 13.50525999 seconds
+Run  5: 13.53290296 seconds
+Run  6: 13.53173304 seconds
+Run  7: 13.50657010 seconds
+Run  8: 13.51046085 seconds
+Run  9: 13.50237417 seconds
+Run 10: 13.50461197 seconds
+Running for  1000 timesteps with   10000000 points took 13.51457400 seconds with stddev = 0.01484774 after 10 reruns.
+============================================================================================
+Type: MPI using 4 threads
+============================================================================================
+Run  1: 0.00124598 seconds
+Run  2: 0.00116587 seconds
+Run  3: 0.00118995 seconds
+Run  4: 0.00125599 seconds
+Run  5: 0.00118208 seconds
+Run  6: 0.00119805 seconds
+Run  7: 0.00118089 seconds
+Run  8: 0.00330901 seconds
+Run  9: 0.00188303 seconds
+Run 10: 0.00126505 seconds
+Running for  1000 timesteps with       1000 points took 0.00148759 seconds with stddev = 0.00064022 after 10 reruns.
+Run  1: 0.00371194 seconds
+Run  2: 0.00663614 seconds
+Run  3: 0.00390005 seconds
+Run  4: 0.00371099 seconds
+Run  5: 0.02072310 seconds
+Run  6: 0.00382090 seconds
+Run  7: 0.00371289 seconds
+Run  8: 0.00370407 seconds
+Run  9: 0.00371599 seconds
+Run 10: 0.00370502 seconds
+Running for  1000 timesteps with      10000 points took 0.00573411 seconds with stddev = 0.00507037 after 10 reruns.
+Run  1: 0.03350306 seconds
+Run  2: 0.03347707 seconds
+Run  3: 0.03361392 seconds
+Run  4: 0.03370905 seconds
+Run  5: 0.03363085 seconds
+Run  6: 0.03380704 seconds
+Run  7: 0.03359103 seconds
+Run  8: 0.03352499 seconds
+Run  9: 0.03354096 seconds
+Run 10: 0.03362393 seconds
+Running for  1000 timesteps with     100000 points took 0.03360219 seconds with stddev = 0.00009494 after 10 reruns.
+Run  1: 1.31532598 seconds
+Run  2: 1.31545901 seconds
+Run  3: 1.31544805 seconds
+Run  4: 1.31741619 seconds
+Run  5: 1.31968713 seconds
+Run  6: 1.31715512 seconds
+Run  7: 1.31358099 seconds
+Run  8: 1.31342506 seconds
+Run  9: 1.31426501 seconds
+Run 10: 1.36686897 seconds
+Running for  1000 timesteps with    1000000 points took 1.32086315 seconds with stddev = 0.01544224 after 10 reruns.
+Run  1: 13.84518790 seconds
+Run  2: 13.84219813 seconds
+Run  3: 13.84034014 seconds
+Run  4: 13.84449100 seconds
+Run  5: 13.86562896 seconds
+Run  6: 14.01391196 seconds
+Run  7: 13.93932700 seconds
+Run  8: 13.99961305 seconds
+Run  9: 14.09281683 seconds
+Run 10: 13.98840690 seconds
+Running for  1000 timesteps with   10000000 points took 13.92719219 seconds with stddev = 0.08729983 after 10 reruns.
+============================================================================================
+Type: MPI using 5 threads
+============================================================================================
+Run  1: 0.00317407 seconds
+Run  2: 0.00317001 seconds
+Run  3: 0.00570202 seconds
+Run  4: 0.00317287 seconds
+Run  5: 0.00324011 seconds
+Run  6: 0.00317597 seconds
+Run  7: 0.00862885 seconds
+Run  8: 0.00331497 seconds
+Run  9: 0.00318789 seconds
+Run 10: 0.00321603 seconds
+Running for  1000 timesteps with       1000 points took 0.00399828 seconds with stddev = 0.00171400 after 10 reruns.
+Run  1: 0.00959516 seconds
+Run  2: 0.00710797 seconds
+Run  3: 0.01193404 seconds
+Run  4: 0.00708103 seconds
+Run  5: 0.00717592 seconds
+Run  6: 0.00707603 seconds
+Run  7: 0.00709009 seconds
+Run  8: 0.00708389 seconds
+Run  9: 0.00710011 seconds
+Run 10: 0.00703883 seconds
+Running for  1000 timesteps with      10000 points took 0.00782831 seconds with stddev = 0.00155886 after 10 reruns.
+Run  1: 0.05487895 seconds
+Run  2: 0.05384207 seconds
+Run  3: 0.05323195 seconds
+Run  4: 0.05349183 seconds
+Run  5: 0.05507708 seconds
+Run  6: 0.05406213 seconds
+Run  7: 0.05381203 seconds
+Run  8: 0.05285501 seconds
+Run  9: 0.05288601 seconds
+Run 10: 0.05283713 seconds
+Running for  1000 timesteps with     100000 points took 0.05369742 seconds with stddev = 0.00076378 after 10 reruns.
+Run  1: 1.43301010 seconds
+Run  2: 1.40616679 seconds
+Run  3: 1.39586496 seconds
+Run  4: 1.34812999 seconds
+Run  5: 1.35198307 seconds
+Run  6: 1.37336922 seconds
+Run  7: 1.39220405 seconds
+Run  8: 1.36081100 seconds
+Run  9: 1.32522202 seconds
+Run 10: 1.38385606 seconds
+Running for  1000 timesteps with    1000000 points took 1.37706172 seconds with stddev = 0.03006227 after 10 reruns.
+Run  1: 14.47777104 seconds
+Run  2: 14.49272895 seconds
+Run  3: 14.56378508 seconds
+Run  4: 14.45332909 seconds
+Run  5: 14.47788692 seconds
+Run  6: 14.31906891 seconds
+Run  7: 14.35169697 seconds
+Run  8: 14.42061806 seconds
+Run  9: 14.35600996 seconds
+Run 10: 14.45144510 seconds
+Running for  1000 timesteps with   10000000 points took 14.43643401 seconds with stddev = 0.07141316 after 10 reruns.

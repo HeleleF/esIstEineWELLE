@@ -157,7 +157,7 @@ void doGraphics()
     double prev, now;
 
     // variables for framerate
-    const int fps = 24;
+    const int fps = 21;
     const Uint32 ticksPerFrame = 1000 / fps;
 
     static Uint32 lastFrameTick = 0;

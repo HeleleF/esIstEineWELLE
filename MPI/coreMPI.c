@@ -320,11 +320,11 @@ void checkParams()
         exit(EXIT_FAILURE);
     }
 
-    if (intervalEnd < 1)
+    if (intervalEnd < 10)
     {
         if (id == FIRST)
         {
-            printf("[ERROR] Right interval border must not be smaller than 1\n");
+            printf("[ERROR] Right interval border must not be smaller than 10\n");
         }
         MPI_Finalize();
         exit(EXIT_FAILURE);

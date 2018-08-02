@@ -255,9 +255,9 @@ void checkParams()
         exit(EXIT_FAILURE);
     }
 
-    if (intervalEnd < 1)
+    if (intervalEnd < 10)
     {
-        printf("[ERROR] Right interval border must not be smaller than 1\n");
+        printf("[ERROR] Right interval border must not be smaller than 10\n");
         exit(EXIT_FAILURE);
     }
 
